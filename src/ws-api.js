@@ -50,7 +50,7 @@ class WsApi extends EventEmitter {
 function wsConnect(url) {
   const ws = new WS(url);
 
-  ws.on('message', function(message) {
+  function processMessage(message) {
     message = pako.inflate(message, { raw: true, to: 'string' });
     // console.log(message);
     if (message === 'pong') return ;
@@ -62,7 +62,10 @@ function wsConnect(url) {
     } else if (data.table) {
       ws.emit(data.table, data.data);
     }
-  });
+  }
+
+  if (ws.on) ws.on('message', processMessage);
+  else ws.onmessage = processMessage;
 
   return ws;
 }
