@@ -9,8 +9,12 @@ class WsApi extends EventEmitter {
     super();
 
     const socket = new WS('wss://real.okex.com:10442/ws/v3');
+    socket.binaryType = "arraybuffer";
 
     const processMessage = message => {
+      if (message.data) {
+        message = message.data;
+      }
       message = pako.inflate(message, { raw: true, to: 'string' });
       // console.log(message);
       if (message === 'pong') return ;
@@ -37,11 +41,6 @@ class WsApi extends EventEmitter {
   }
 
   subscribe(channel) {
-    const parts = channel.split(':');
-    if (!this._listened.has(parts[0])) {
-      this.on(parts[0], data => this.emit(parts[0], data));
-    }
-
     this.socket.send(JSON.stringify({ op: 'subscribe', args: [channel] }));
     return new Promise(resolve => this.once(channel, resolve));
   }
