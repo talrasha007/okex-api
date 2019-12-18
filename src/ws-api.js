@@ -8,7 +8,25 @@ class WsApi extends EventEmitter {
   constructor(apiKey, apiSecret, passphrase) {
     super();
 
-    const socket = wsConnect('wss://real.okex.com:10442/ws/v3');
+    const socket = new WS('wss://real.okex.com:10442/ws/v3');
+
+    const processMessage = message => {
+      message = pako.inflate(message, { raw: true, to: 'string' });
+      // console.log(message);
+      if (message === 'pong') return ;
+
+      const data = JSON.parse(message);
+      // console.log(data);
+      if (data.event) {
+        this.emit(data.channel || data.event, data);
+      } else if (data.table) {
+        this.emit(data.table, data.data);
+      }
+    };
+
+    if (socket.on) socket.on('message', processMessage);
+    else socket.onmessage = processMessage;
+
     Object.assign(this, {
       signer: new Signer(apiSecret),
       apiKey,
@@ -21,11 +39,11 @@ class WsApi extends EventEmitter {
   subscribe(channel) {
     const parts = channel.split(':');
     if (!this._listened.has(parts[0])) {
-      this.socket.on(parts[0], data => this.emit(parts[0], data));
+      this.on(parts[0], data => this.emit(parts[0], data));
     }
 
     this.socket.send(JSON.stringify({ op: 'subscribe', args: [channel] }));
-    return new Promise(resolve => this.socket.once(channel, resolve));
+    return new Promise(resolve => this.once(channel, resolve));
   }
 
   login() {
@@ -39,35 +57,12 @@ class WsApi extends EventEmitter {
     });
 
     return new Promise(((resolve, reject) => {
-      this.socket.once('login', data => {
+      this.once('login', data => {
         if (data.success) resolve(data);
         else reject(data);
       });
     }));
   }
-}
-
-function wsConnect(url) {
-  const ws = new WS(url);
-
-  function processMessage(message) {
-    message = pako.inflate(message, { raw: true, to: 'string' });
-    // console.log(message);
-    if (message === 'pong') return ;
-
-    const data = JSON.parse(message);
-    // console.log(data);
-    if (data.event) {
-      ws.emit(data.channel || data.event, data);
-    } else if (data.table) {
-      ws.emit(data.table, data.data);
-    }
-  }
-
-  if (ws.on) ws.on('message', processMessage);
-  else ws.onmessage = processMessage;
-
-  return ws;
 }
 
 module.exports = WsApi;
