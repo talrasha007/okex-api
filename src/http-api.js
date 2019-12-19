@@ -2,8 +2,8 @@ const axios = require('axios');
 const Signer = require('./signer');
 
 class HttpApi {
-  constructor(apiKey, apiSecret, passphrase) {
-    const baseUrl = 'https://www.okex.com';
+  constructor(apiKey, apiSecret, passphrase, opt = {}) {
+    const baseUrl = opt.url || 'https://www.okex.com';
     const signer = new Signer(apiSecret);
 
     Object.assign(this, {

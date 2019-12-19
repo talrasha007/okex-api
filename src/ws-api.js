@@ -5,11 +5,13 @@ const WS = require('isomorphic-ws');
 const Signer = require('./signer');
 
 class WsApi extends EventEmitter {
-  constructor(apiKey, apiSecret, passphrase) {
+  constructor(apiKey, apiSecret, passphrase, opt = {}) {
     super();
 
-    const socket = new WS('wss://real.okex.com:10442/ws/v3');
+    const socket = new WS(opt.url || 'wss://real.okex.com:10442/ws/v3');
     socket.binaryType = "arraybuffer";
+
+    // setInterval(() => socket.send('ping'), 3000);
 
     const processMessage = message => {
       if (message.data) {
