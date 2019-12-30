@@ -1,6 +1,6 @@
 const pako = require('pako');
 const { EventEmitter } = require('events');
-const WS = require('isomorphic-ws');
+const WS = require('async-ws');
 
 const Signer = require('./signer');
 
@@ -8,9 +8,7 @@ class WsApi extends EventEmitter {
   constructor(apiKey, apiSecret, passphrase, opt = {}) {
     super();
 
-    const socket = new WS(opt.url || 'wss://real.okex.com:10442/ws/v3');
-    socket.binaryType = "arraybuffer";
-
+    const socket = new WS(opt.url || 'wss://real.okex.com:10442/ws/v3', { binaryType: 'arraybuffer' });
     // setInterval(() => socket.send('ping'), 3000);
 
     const processMessage = message => {
@@ -30,8 +28,7 @@ class WsApi extends EventEmitter {
       }
     };
 
-    if (socket.on) socket.on('message', processMessage);
-    else socket.onmessage = processMessage;
+    socket.on('message', processMessage);
 
     Object.assign(this, {
       signer: new Signer(apiSecret),
