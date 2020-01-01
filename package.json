@@ -1,6 +1,6 @@
 {
   "name": "okex-api",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "okex api for both node & frontend",
   "main": "index.js",
   "scripts": {
@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/talrasha007/okex-api#readme",
   "dependencies": {
-    "async-ws": "^0.0.2",
+    "async-ws": "^0.0.3",
     "axios": "^0.19.0",
     "pako": "^1.0.10"
   },
