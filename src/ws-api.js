@@ -10,8 +10,10 @@ class WsApi extends EventEmitter {
 
     const socket = new WS(opt.url || 'wss://real.okex.com:10442/ws/v3', { binaryType: 'arraybuffer' });
     (async function () {
-      await socket.send('ping');
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      while (socket) {
+        await socket.send('ping');
+        await new Promise(resolve => setTimeout(resolve, 3000));
+      }
     })();
 
     let lastMessage;
