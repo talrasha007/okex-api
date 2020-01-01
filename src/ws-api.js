@@ -9,9 +9,13 @@ class WsApi extends EventEmitter {
     super();
 
     const socket = new WS(opt.url || 'wss://real.okex.com:10442/ws/v3', { binaryType: 'arraybuffer' });
-    // setInterval(() => socket.send('ping'), 3000);
+    setInterval(() => socket.send('ping'), 3000);
 
+    let lastMessage;
+    setInterval(() => lastMessage && Date.now() - lastMessage > 15000 && socket.reconnect(), 1000);
     const processMessage = message => {
+      lastMessage = Date.now();
+
       if (message.data) {
         message = message.data;
       }

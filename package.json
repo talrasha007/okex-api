@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/talrasha007/okex-api#readme",
   "dependencies": {
-    "async-ws": "^0.0.1",
+    "async-ws": "^0.0.2",
     "axios": "^0.19.0",
     "pako": "^1.0.10"
   },
