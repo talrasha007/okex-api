@@ -8,8 +8,9 @@ const wsApi = new WsApi();
   const ethUSD = tokens.filter(t => t.startsWith('ETH-USD-'));
   console.log(ethUSD);
 
-  wsApi.on('futures/depth5', console.log);
+  const depth = wsApi.futures.depth;
+  depth.addListener(console.log);
   for (const ins of ethUSD) {
-    console.log(await wsApi.subscribe(`futures/depth5:${ins}`));
+    console.log(await depth.subscribe(ins));
   }
 })();

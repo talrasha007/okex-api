@@ -38,13 +38,36 @@ class WsApi extends EventEmitter {
     };
 
     socket.on('message', processMessage);
+    const subscription = (channel) => ({
+      subscribe: param => this.subscribe(param ? `${channel}:${param}` : channel),
+      on: cb => this.on(channel, cb),
+      off: cb => this.off(channel, cb),
+      once: cb => this.once(channel, cb),
+      addListener: cb => this.addListener(channel, cb),
+      removeListener: cb => this.removeListener(channel, cb),
+      removeAllListeners: () => this.removeAllListeners(channel)
+    });
 
     Object.assign(this, {
       signer: new Signer(apiSecret),
       apiKey,
       passphrase,
       socket,
-      _listened: new Set()
+      _listened: new Set(),
+
+      futures: {
+        account: subscription('futures/account'),
+        order: subscription('futures/order'),
+        position: subscription('futures/position'),
+        depth: subscription('futures/depth5')
+      },
+
+      swap: {
+        account: subscription('swap/account'),
+        order: subscription('swap/order'),
+        position: subscription('swap/position'),
+        depth: subscription('swap/depth5')
+      }
     });
   }
 
