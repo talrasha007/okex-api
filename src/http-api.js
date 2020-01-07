@@ -74,6 +74,10 @@ class HttpApi {
       swap: {
         getAccounts(currency) {
           return get(`/api/swap/v3/${currency}-USD-SWAP/accounts`);
+        },
+
+        getPositions(instrumentId) {
+          return get(`/api/swap/v3/${instrumentId}/position`);
         }
       }
     });
