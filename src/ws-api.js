@@ -72,6 +72,12 @@ class WsApi extends EventEmitter {
     });
   }
 
+  update(newApiKey, newApiSecret, newPassphrase) {
+    this.signer = new Signer(newApiSecret);
+    this.apiKey = newApiKey;
+    this.passphrase = newPassphrase;
+  }
+
   subscribe(channel) {
     this.socket.send(JSON.stringify({ op: 'subscribe', args: [channel] }));
     return new Promise(resolve => this.once(channel, resolve));

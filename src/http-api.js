@@ -4,7 +4,7 @@ const Signer = require('./signer');
 class HttpApi {
   constructor(apiKey, apiSecret, passphrase, opt = {}) {
     const baseUrl = opt.url || 'https://www.okex.com';
-    const signer = new Signer(apiSecret);
+    let signer = new Signer(apiSecret);
 
     const getSignedHeader = (method, path, params) => {
       const sign = signer.sign(path, params, method);
@@ -33,7 +33,14 @@ class HttpApi {
 
     Object.assign(this, {
       apiKey,
-      passphrase,
+
+      update(newApiKey, newApiSecret, newPassphrase) {
+        this.apiKey = newApiKey;
+        signer = new Signer(newApiSecret);
+        apiKey = newApiKey;
+        apiSecret = newApiSecret;
+        passphrase = newPassphrase;
+      },
 
       account: {
         // from/to: (0: sub account 1: spot 3: futures 4:C2C 5: margin 6: wallet 7:ETT 8:PiggyBank 9：swap)
