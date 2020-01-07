@@ -1,7 +1,7 @@
 const { httpApi, wsApi } = require('./api');
 
 (async () => {
-  const all = await httpApi.futures.getAllTokens();
+  const all = await httpApi.futures.getInstruments();
   const eth = all.reverse().find(v => v.startsWith('ETH-USD-'));
   console.log(eth);
   console.log(await httpApi.futures.getAccounts());

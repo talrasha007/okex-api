@@ -4,7 +4,7 @@ const httpApi = new HttpApi();
 const wsApi = new WsApi();
 
 (async () => {
-  const tokens = await httpApi.futures.getAllTokens();
+  const tokens = await httpApi.futures.getInstruments();
   const ethUSD = tokens.filter(t => t.startsWith('ETH-USD-'));
   console.log(ethUSD);
 
