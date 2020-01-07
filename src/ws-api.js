@@ -56,6 +56,7 @@ class WsApi extends EventEmitter {
       _listened: new Set(),
 
       futures: {
+        instruments: subscription('futures/instruments'),
         account: subscription('futures/account'),
         order: subscription('futures/order'),
         position: subscription('futures/position'),
@@ -77,14 +78,14 @@ class WsApi extends EventEmitter {
   }
 
   login() {
-    this.socket.send({
+    this.socket.send(JSON.stringify({
       op: 'login',
       args: [
         this.apiKey,
         this.passphrase,
-        ...this.http.signer.sign('/users/self/verify')
+        ...this.signer.sign('/users/self/verify')
       ]
-    });
+    }));
 
     return new Promise(((resolve, reject) => {
       this.once('login', data => {
