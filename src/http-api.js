@@ -73,6 +73,15 @@ class HttpApi {
           return get('/api/futures/v3/accounts');
         },
 
+        // type: 1:开多 2:开空 3:平多 4:平空
+        order(instrument_id, type, price, size, match_price, client_oid) {
+          return post('/api/futures/v3/order', { instrument_id, type, price, size, match_price, client_oid });
+        },
+
+        cancelOrder(instrument_id, id) {
+          return post(`/api/futures/v3/cancel_order/${instrument_id}/${id}`);
+        },
+
         getPositions(instrumentId) {
           return get(`/api/futures/v3/${instrumentId}/position`);
         }
@@ -81,6 +90,15 @@ class HttpApi {
       swap: {
         getAccounts(currency) {
           return get(`/api/swap/v3/${currency}-USD-SWAP/accounts`);
+        },
+
+        // type: 1:开多 2:开空 3:平多 4:平空
+        order(instrument_id, type, price, size, match_price, client_oid) {
+          return post('/api/swap/v3/order', { instrument_id, type, price, size, match_price, client_oid });
+        },
+
+        cancelOrder(instrument_id, id) {
+          return post(`/api/swap/v3/cancel_order/${instrument_id}/${id}`);
         },
 
         getPositions(instrumentId) {

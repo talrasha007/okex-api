@@ -13,4 +13,9 @@ const { httpApi, wsApi } = require('./api');
 
   wsApi.futures.order.addListener(console.log);
   wsApi.futures.position.addListener(console.log);
+
+  await new Promise(resolve => setTimeout(resolve, 2000));
+  await httpApi.futures.order(eth, 1, 0, 1, 1);
+  await new Promise(resolve => setTimeout(resolve, 5000));
+  await httpApi.futures.order(eth, 3, 0, 1, 1);
 })().catch(e => console.error(e.stack));
