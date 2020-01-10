@@ -1,6 +1,6 @@
 {
   "name": "okex-api",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "okex api for both node & frontend",
   "main": "index.js",
   "scripts": {
