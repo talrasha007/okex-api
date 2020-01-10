@@ -5,7 +5,7 @@ const { httpApi, wsApi } = require('./api');
   const eth = all.reverse().find(v => v.startsWith('ETH-USD-'));
   console.log(eth);
   console.log(await httpApi.futures.getAccounts());
-  console.log(await httpApi.futures.getPositions(eth));
+  console.log(await httpApi.futures.getPosition(eth));
 
   console.log(await wsApi.login());
   console.log(await wsApi.futures.order.subscribe(eth));

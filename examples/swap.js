@@ -3,7 +3,7 @@ const { httpApi, wsApi } = require('./api');
 (async () => {
   const ins = 'ETH-USD-SWAP';
   console.log(await httpApi.swap.getAccounts('BTC'));
-  console.log(await httpApi.swap.getPositions(ins));
+  console.log(await httpApi.swap.getPosition(ins));
 
   console.log(await wsApi.login());
   console.log(await wsApi.swap.order.subscribe(ins));

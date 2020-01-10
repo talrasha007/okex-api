@@ -84,7 +84,7 @@ class HttpApi {
           return post(`/api/futures/v3/cancel_order/${instrument_id}/${id}`);
         },
 
-        getPositions(instrumentId) {
+        getPosition(instrumentId) {
           return get(`/api/futures/v3/${instrumentId}/position`);
         }
       },
@@ -103,7 +103,7 @@ class HttpApi {
           return post(`/api/swap/v3/cancel_order/${instrument_id}/${id}`);
         },
 
-        getPositions(instrumentId) {
+        getPosition(instrumentId) {
           return get(`/api/swap/v3/${instrumentId}/position`);
         }
       }
