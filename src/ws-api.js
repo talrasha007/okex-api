@@ -3,10 +3,12 @@ const { EventEmitter } = require('events');
 const WS = require('async-ws');
 
 const Signer = require('./signer');
+const { OrderWatcher } = require('./order');
 
 class WsApi extends EventEmitter {
   constructor(apiKey, apiSecret, passphrase, opt = {}) {
     super();
+    if (arguments.length === 1) opt = apiKey;
 
     const socket = new WS(opt.url || 'wss://real.okex.com:10442/ws/v3', { binaryType: 'arraybuffer' });
     (async function () {
@@ -70,6 +72,8 @@ class WsApi extends EventEmitter {
         depth: subscription('swap/depth5')
       }
     });
+
+    this.orderWatcher = opt.httpApi && new OrderWatcher(this, opt.httpApi);
   }
 
   update(newApiKey, newApiSecret, newPassphrase) {

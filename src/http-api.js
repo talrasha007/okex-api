@@ -3,6 +3,8 @@ const Signer = require('./signer');
 
 class HttpApi {
   constructor(apiKey, apiSecret, passphrase, opt = {}) {
+    if (arguments.length === 1) opt = apiKey;
+
     const baseUrl = opt.url || 'https://www.okex.com';
     let signer = new Signer(apiSecret);
 
