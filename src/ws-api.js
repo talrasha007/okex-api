@@ -3,7 +3,7 @@ const { EventEmitter } = require('events');
 const WS = require('async-ws');
 
 const Signer = require('./signer');
-const { OrderWatcher } = require('./order');
+const { Trade } = require('./trade');
 
 class WsApi extends EventEmitter {
   constructor(apiKey, apiSecret, passphrase, opt = {}) {
@@ -73,7 +73,7 @@ class WsApi extends EventEmitter {
       }
     });
 
-    this.orderWatcher = opt.httpApi && new OrderWatcher(this, opt.httpApi);
+    this.trade = opt.httpApi && new Trade(this, opt.httpApi);
   }
 
   update(newApiKey, newApiSecret, newPassphrase) {

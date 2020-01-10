@@ -50,7 +50,7 @@ class Order {
   }
 }
 
-class OrderWatcher extends EventEmitter {
+class Trade extends EventEmitter {
   constructor(wsApi, httpApi) {
     super();
     this._httpApi = httpApi;
@@ -96,4 +96,4 @@ class OrderWatcher extends EventEmitter {
   }
 }
 
-module.exports = { OrderWatcher, Order };
+module.exports = { Trade };
