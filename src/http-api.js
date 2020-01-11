@@ -56,7 +56,7 @@ class HttpApi {
           return get('/api/spot/v3/accounts');
         },
 
-        limitOrder(instrument_id, side, price, size, client_oid) {
+        order(instrument_id, side, price, size, client_oid) {
           return post('/api/spot/v3/orders', { instrument_id, type: 'limit', side, price, size, client_oid });
         },
 
@@ -86,6 +86,10 @@ class HttpApi {
 
         getPosition(instrumentId) {
           return get(`/api/futures/v3/${instrumentId}/position`);
+        },
+
+        getPositions() {
+          return get(`/api/futures/v3/position`);
         }
       },
 
@@ -105,6 +109,10 @@ class HttpApi {
 
         getPosition(instrumentId) {
           return get(`/api/swap/v3/${instrumentId}/position`);
+        },
+
+        getPositions() {
+          return get(`/api/swap/v3/position`);
         }
       }
     });
