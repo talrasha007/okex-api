@@ -1,6 +1,7 @@
 const { EventEmitter } = require('events');
 
 const Order = require('./order');
+const { etlSwapPosition } = require('./position');
 
 class Trade extends EventEmitter {
   constructor(wsApi, httpApi) {
@@ -9,6 +10,7 @@ class Trade extends EventEmitter {
     this._wsApi = wsApi;
     this._subsribed = new Set();
     this._orders = new Map();
+    this._positions = new Map();
 
     const processOrderData = orders => orders.forEach(order => {
       const { order_id } = order;
@@ -28,6 +30,7 @@ class Trade extends EventEmitter {
       for (const ins of this._subsribed) {
         const tradeType = ins.endsWith('SWAP') ? 'swap' : 'futures';
         this._wsApi[tradeType].order.subscribe(ins);
+        this._wsApi[tradeType].position.subscribe(ins);
       }
     });
   }
@@ -36,15 +39,42 @@ class Trade extends EventEmitter {
     return Array.from(this._orders.values());
   }
 
+  get positions() {
+    return Array.from(this._positions.values());
+  }
+
   async order(instrument_id, type, price, size, match_price, client_oid) {
+    const tradeType = await this._subscribe(instrument_id);
+    return new Order(this, await this._httpApi[tradeType].order(instrument_id, type, price, size, match_price, client_oid));
+  }
+
+  async load() {
+    this._setPosition(await this._httpApi.swap.getPositions(), true);
+
+    const fp = await this._httpApi.futures.getPositions();
+    this._setPosition(fp.holding[0]);
+  }
+
+  async _subscribe(instrument_id) {
     const tradeType = instrument_id.endsWith('SWAP') ? 'swap' : 'futures';
 
     if (!this._subsribed.has(instrument_id)) {
       await this._wsApi[tradeType].order.subscribe(instrument_id);
+      await this._wsApi[tradeType].position.subscribe(instrument_id);
       this._subsribed.add(instrument_id);
     }
 
-    return new Order(this, await this._httpApi[tradeType].order(instrument_id, type, price, size, match_price, client_oid));
+    return tradeType;
+  }
+
+  _setPosition(pp, etlData = false) {
+    pp.forEach(p => {
+      p = etlData ? etlSwapPosition(p) : p;
+      const { instrument_id } = p;
+      const oldData = this._positions.get(instrument_id);
+      if (oldData) Object.assign(oldData, p);
+      else this._positions.set(instrument_id, p);
+    });
   }
 }
 
