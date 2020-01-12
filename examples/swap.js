@@ -2,15 +2,14 @@ const { httpApi, wsApi } = require('./api');
 
 (async () => {
   const ins = 'ETH-USD-SWAP';
-  console.log(await httpApi.swap.getAccounts('BTC'));
+  console.log(await httpApi.swap.getAccounts('ETH'));
   console.log(await httpApi.swap.getPosition(ins));
 
   console.log(await wsApi.login());
-  console.log(await wsApi.swap.order.subscribe(ins));
-  console.log(await wsApi.swap.position.subscribe(ins));
+  await wsApi.trade.load();
 
-  wsApi.swap.order.addListener(console.log);
-  wsApi.swap.position.addListener(console.log);
+  wsApi.trade.on('order', () => console.log('active orders:', wsApi.trade.orders.length));
+  wsApi.trade.on('position', console.log);
 
   await new Promise(resolve => setTimeout(resolve, 2000));
   await httpApi.swap.order(ins, 1, 0, 1, 1);

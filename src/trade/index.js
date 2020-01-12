@@ -25,6 +25,8 @@ class Trade extends EventEmitter {
 
     wsApi.futures.order.addListener(processOrderData);
     wsApi.swap.order.addListener(processOrderData);
+    wsApi.futures.position.addListener(p => this._setPosition(p));
+    wsApi.swap.position.addListener(p => this._setPosition(p, true));
 
     wsApi.on('login', () => {
       for (const ins of this._subsribed) {
@@ -53,6 +55,9 @@ class Trade extends EventEmitter {
 
     const fp = await this._httpApi.futures.getPositions();
     this._setPosition(fp.holding[0]);
+
+    for (const ins of this._positions.keys())
+      await this._subscribe(ins);
   }
 
   async _subscribe(instrument_id) {
@@ -72,8 +77,11 @@ class Trade extends EventEmitter {
       p = etlData ? etlSwapPosition(p) : p;
       const { instrument_id } = p;
       const oldData = this._positions.get(instrument_id);
+
       if (oldData) Object.assign(oldData, p);
       else this._positions.set(instrument_id, p);
+
+      this.emit('position', p);
     });
   }
 }
