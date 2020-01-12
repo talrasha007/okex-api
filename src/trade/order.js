@@ -28,11 +28,13 @@ class Order {
       if (!this.isFinished()) await this._finishPromise;
     }
   }
+}
 
-  static _listened = new Set();
-  static _watched = new Map();
+Object.assign(Order, {
+  _listened: new Set(),
+  _watched: new Map(),
 
-  static processOrder(order) {
+  processOrder(order) {
     const { order_id } = order;
 
     const cb = Order._watched.get(order_id);
@@ -40,12 +42,12 @@ class Order {
       if (Order.isFinished(order)) Order._watched.delete(order_id);
       cb(order);
     }
-  }
+  },
 
-  static isFinished(order) {
+  isFinished(order) {
     const { state } = order;
     return state * 1 === 2 || state < 0;
   }
-}
+});
 
 module.exports = Order;
