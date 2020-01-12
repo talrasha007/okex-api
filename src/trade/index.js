@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const { EventEmitter } = require('events');
 
 const Order = require('./order');
@@ -45,9 +46,13 @@ class Trade extends EventEmitter {
     return Array.from(this._positions.values());
   }
 
-  async order(instrument_id, type, price, size, match_price, client_oid) {
+  async order(instrument_id, type, price, size, match_price, client_oid, waitForComplete = false) {
+    if (_.isBoolean(_.last(arguments))) waitForComplete = _.last(arguments);
+
     const tradeType = await this._subscribe(instrument_id);
-    return new Order(this, await this._httpApi[tradeType].order(instrument_id, type, price, size, match_price, client_oid));
+    const order = new Order(this, await this._httpApi[tradeType].order(instrument_id, type, price, size, match_price, client_oid));
+    if (waitForComplete) await order.waitForFinish();
+    return order;
   }
 
   async load() {
