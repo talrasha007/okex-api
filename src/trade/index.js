@@ -59,7 +59,7 @@ class Trade extends EventEmitter {
     this._setPosition(await this._httpApi.swap.getPositions(), true);
 
     const fp = await this._httpApi.futures.getPositions();
-    this._setPosition(fp.holding[0]);
+    fp.holding.forEach(p => this._setPosition(p));
 
     for (const ins of this._positions.keys())
       await this._subscribe(ins);
