@@ -66,13 +66,16 @@ class HttpApi {
       },
 
       futures: {
+        getAccounts(currency, usd = 'USD') {
+          return get(currency ?
+            `/api/futures/v3/accounts/${currency.toLowerCase()}-${usd.toLowerCase()}` :
+            '/api/futures/v3/accounts'
+          );
+        },
+
         async getInstruments() {
           const { data } = await axios.get(baseUrl + '/api/futures/v3/instruments/ticker');
           return data.map(item => item.instrument_id);
-        },
-
-        getAccounts() {
-          return get('/api/futures/v3/accounts');
         },
 
         // type: 1:开多 2:开空 3:平多 4:平空
@@ -94,8 +97,11 @@ class HttpApi {
       },
 
       swap: {
-        getAccounts(currency) {
-          return get(`/api/swap/v3/${currency}-USD-SWAP/accounts`);
+        getAccounts(currency, usd = 'USD') {
+          return get(currency ?
+            `/api/swap/v3/${currency}-${usd}-SWAP/accounts` :
+            '/api/swap/v3/accounts'
+          );
         },
 
         // type: 1:开多 2:开空 3:平多 4:平空
