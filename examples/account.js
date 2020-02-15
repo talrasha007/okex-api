@@ -3,11 +3,11 @@ const { wsApi, httpApi } = require('./api');
 (async () => {
   await wsApi.login();
 
-  console.log(await httpApi.futures.getAccounts('BTC'));
-  console.log(await httpApi.futures.getAccounts('BTC', 'USDT'));
+  console.log(await httpApi.futures.getAccounts());
+  // console.log(await httpApi.futures.getAccounts('BTC', 'USDT'));
 
-  console.log(await httpApi.swap.getAccounts('BTC'));
-  console.log(await httpApi.swap.getAccounts('BTC', 'USDT'));
+  console.log(await httpApi.swap.getAccounts());
+  // console.log(await httpApi.swap.getAccounts('BTC', 'USDT'));
 
   console.log('xxxxxxxxxxxxxxxxxxxx');
   wsApi.futures.account.addListener(console.log);

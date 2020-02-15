@@ -10,8 +10,10 @@ class Trade extends EventEmitter {
     this._httpApi = httpApi;
     this._wsApi = wsApi;
     this._subsribed = new Set();
+    this._subscibedAccounts = new Set();
     this._orders = new Map();
     this._positions = new Map();
+    this._accounts = new Map();
 
     const processOrderData = orders => orders.forEach(order => {
       const { order_id } = order;
@@ -24,6 +26,9 @@ class Trade extends EventEmitter {
       this.emit('order', order);
     });
 
+    wsApi.futures.account.addListener(accounts => accounts.forEach(v => this._setAccount(v)));
+    wsApi.swap.account.addListener(accounts => this._setAccount(accounts));
+
     wsApi.futures.order.addListener(processOrderData);
     wsApi.swap.order.addListener(processOrderData);
     wsApi.futures.position.addListener(p => this._setPosition(p));
@@ -34,6 +39,11 @@ class Trade extends EventEmitter {
         const tradeType = ins.endsWith('SWAP') ? 'swap' : 'futures';
         this._wsApi[tradeType].order.subscribe(ins);
         this._wsApi[tradeType].position.subscribe(ins);
+      }
+
+      for (const acc of this._subscibedAccounts) {
+        const tradeType = acc.endsWith('SWAP') ? 'swap' : 'futures';
+        this._wsApi[tradeType].account.subscribe(acc);
       }
     });
   }
@@ -46,6 +56,10 @@ class Trade extends EventEmitter {
     return Array.from(this._positions.values());
   }
 
+  get accounts() {
+    return Array.from(this._accounts.values());
+  }
+
   async order(instrument_id, type, price, size, match_price, client_oid, waitForComplete = false) {
     if (_.isBoolean(_.last(arguments))) waitForComplete = _.last(arguments);
 
@@ -56,6 +70,9 @@ class Trade extends EventEmitter {
   }
 
   async load() {
+    this._setAccount((await this._httpApi.futures.getAccounts()).info);
+    this._setAccount((await this._httpApi.swap.getAccounts()).info);
+
     this._setPosition(await this._httpApi.swap.getPositions(), true);
 
     const fp = await this._httpApi.futures.getPositions();
@@ -74,7 +91,22 @@ class Trade extends EventEmitter {
       this._subsribed.add(instrument_id);
     }
 
+    const parts = instrument_id.split('-');
+    const account = tradeType === 'swap' ? instrument_id : parts[1] === 'USD' ? parts[0] : `${parts[0]}-${parts[1]}`;
+
+    if (!this._subscibedAccounts.has(account)) {
+      await this._wsApi[tradeType].account.subscribe(account);
+      this._subscibedAccounts.add(account);
+    }
+
     return tradeType;
+  }
+
+  _setAccount(accounts) {
+    accounts = Array.isArray(accounts) ? accounts : Object.values(accounts);
+    for (const acc of accounts) {
+      this._accounts.set(acc.instrument_id || acc.underlying, acc);
+    }
   }
 
   _setPosition(pp, etlData = false) {
