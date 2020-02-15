@@ -106,6 +106,7 @@ class Trade extends EventEmitter {
     accounts = Array.isArray(accounts) ? accounts : Object.values(accounts);
     for (const acc of accounts) {
       this._accounts.set(acc.instrument_id || acc.underlying, acc);
+      this.emit('account', acc);
     }
   }
 
