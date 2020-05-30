@@ -46,8 +46,8 @@ class HttpApi {
 
       account: {
         // from/to: (0: sub account 1: spot 3: futures 4:C2C 5: margin 6: wallet 7:ETT 8:PiggyBank 9：swap)
-        transfer(currency, amount, from, to) {
-          return post('/api/account/v3/transfer', { currency, amount, from, to });
+        transfer(currency, amount, from, to, instrument_id) {
+          return post('/api/account/v3/transfer', { currency, amount, from, to, instrument_id });
         }
       },
 
