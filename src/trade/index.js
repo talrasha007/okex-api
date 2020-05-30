@@ -83,6 +83,10 @@ class Trade extends EventEmitter {
       await this._subscribe(ins);
   }
 
+  isSubscribed(instrument_id) {
+    return this._subsribed.has(instrument_id);
+  }
+
   async _subscribe(instrument_id) {
     const tradeType = instrument_id.endsWith('SWAP') ? 'swap' : 'futures';
 
