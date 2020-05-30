@@ -63,7 +63,8 @@ class Trade extends EventEmitter {
   async order(instrument_id, type, price, size, match_price, client_oid, waitForComplete = false) {
     if (_.isBoolean(_.last(arguments))) waitForComplete = _.last(arguments);
 
-    const tradeType = await this._subscribe(instrument_id);
+    const tradeType = instrument_id.endsWith('SWAP') ? 'swap' : 'futures';
+    if (waitForComplete) await this._subscribe(instrument_id);
     const order = new Order(this, await this._httpApi[tradeType].order(instrument_id, type, price, size, match_price, client_oid));
     if (waitForComplete) await order.waitForFinish();
     return order;
