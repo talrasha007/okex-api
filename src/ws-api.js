@@ -10,7 +10,7 @@ class WsApi extends EventEmitter {
     super();
     if (arguments.length === 1) opt = apiKey;
 
-    const socket = new WS(opt.url || 'wss://real.okex.com:10442/ws/v3', { binaryType: 'arraybuffer' });
+    const socket = new WS(opt.url || 'wss://real.okex.com:8443/ws/v3', { binaryType: 'arraybuffer' });
     (async function () {
       while (socket) {
         await socket.send('ping');
