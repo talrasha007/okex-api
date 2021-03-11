@@ -4,9 +4,10 @@ const Signer = require('./signer');
 class HttpApi {
   constructor(apiKey, apiSecret, passphrase, opt = {}) {
     if (arguments.length === 1) opt = apiKey;
+    opt.baseURL = opt.baseURL || 'https://www.okex.com';
 
-    const baseUrl = opt.url || 'https://www.okex.com';
     let signer = new Signer(apiSecret);
+    const http = axios.create(opt);
 
     const getSignedHeader = (method, path, params) => {
       const sign = signer.sign(path, params, method);
@@ -19,7 +20,7 @@ class HttpApi {
     };
 
     const get = async (path, params) => {
-      const { data } = await axios.get(baseUrl + path, { params, headers: getSignedHeader('GET', path, params) });
+      const { data } = await http.get(path, { params, headers: getSignedHeader('GET', path, params) });
       return data;
     };
 
@@ -29,7 +30,7 @@ class HttpApi {
         'Content-Type': 'application/json'
       };
 
-      const { data } = await axios.post(baseUrl + path, body, { headers });
+      const { data } = await http.post(path, body, { headers });
       return data;
     };
 
