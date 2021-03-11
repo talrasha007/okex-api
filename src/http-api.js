@@ -75,7 +75,7 @@ class HttpApi {
         },
 
         async getInstruments() {
-          const { data } = await axios.get(baseUrl + '/api/futures/v3/instruments/ticker');
+          const { data } = await axios.get(opt.baseURL + '/api/futures/v3/instruments/ticker');
           return data.map(item => item.instrument_id);
         },
 
