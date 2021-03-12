@@ -13,7 +13,7 @@ class Order {
   setData(orderRet) {
     const { result, error_code, order_id } = orderRet;
     if (!result || error_code * 1 !== 0) {
-      this._error = { result, error_code };
+      this._error = { result, order_id, error_code };
     }
   }
 
