@@ -2,7 +2,7 @@ const pako = require('pako');
 const { EventEmitter } = require('events');
 const WS = require('async-ws');
 
-const Signer = require('./signer');
+const Signer = require('../signer');
 const { Trade } = require('./trade');
 
 class WsApi extends EventEmitter {

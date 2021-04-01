@@ -1,5 +1,5 @@
 const axios = require('axios');
-const Signer = require('./signer');
+const Signer = require('../signer');
 
 class HttpApi {
   constructor(apiKey, apiSecret, passphrase, opt = {}) {
