@@ -41,6 +41,14 @@ class HttpApi {
     return this.post1('/api/v5/trade/order', { instId, tdMode, clOrdId, side, posSide, ordType, sz, px });
   }
 
+  batchOrder(orders) {
+    return this.post('/api/v5/trade/batch-orders', orders);
+  }
+
+  toOrder(instId, side, posSide, ordType, sz/* size */, px/* price */, clOrdId, tdMode = 'cross') {
+    return { instId, tdMode, clOrdId, side, posSide, ordType, sz, px };
+  }
+
   cancelOrder(instId, ordId) {
     return this.post1('/api/v5/trade/cancel-order', { instId, ordId });
   }
