@@ -25,6 +25,11 @@ class HttpApi {
     return this.get('/api/v5/account/balance', { ccy: coins });
   }
 
+  // instType: MARGIN, SWAP, FUTURES, OPTION
+  getPositions(instType, instId) {
+    return this.get('/api/v5/account/positions', { instType, instId });
+  }
+
   getSignedHeader(method, path, params) {
     const sign = this._signer.sign(path, params, method);
     return {
@@ -36,7 +41,14 @@ class HttpApi {
   }
 
   async get(path, params) {
-    if (params) path += '?' + qs.encode(params);
+    if (params) {
+      for (const key of Object.keys(params || {})) {
+        if (params[key] === null || params[key] === undefined) delete params[key];
+      }
+
+      path += '?' + qs.encode(params);
+    }
+
     const { data } = await this._http.get(path, { headers: this.getSignedHeader('GET', path) });
     return data;
   }
