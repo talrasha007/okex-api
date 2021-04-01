@@ -7,8 +7,7 @@ class HttpApi {
     if (arguments.length === 1) opt = apiKey;
     opt.baseURL = opt.baseURL || 'https://www.okex.com';
 
-    Object.assign(this, { apiKey, passphrase });
-    this._signer = new Signer(apiSecret, 'v5');
+    this.update(apiKey, apiSecret, passphrase);
     this._http = axios.create(opt);
   }
 
