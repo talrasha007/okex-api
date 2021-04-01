@@ -5,6 +5,7 @@ module.exports = {
     WsApi: require('./src/v3/ws-api')
   },
   v5: {
-    HttpApi: require('./src/v5/http-api')
+    HttpApi: require('./src/v5/http-api'),
+    WsApi: require('./src/v5/ws-api')
   }
 };
