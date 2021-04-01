@@ -18,7 +18,7 @@ class HttpApi {
   }
 
   async getTickers(instType) {
-    const { data } = await this._http.get('/api/v5/market/tickers', { params: { instType } });
+    const { data: { data } } = await this._http.get('/api/v5/market/tickers', { params: { instType } });
     return data;
   }
 
@@ -33,6 +33,17 @@ class HttpApi {
   // instType: MARGIN, SWAP, FUTURES, OPTION
   getPositions(instType, instId) {
     return this.get('/api/v5/account/positions', { instType, instId });
+  }
+
+  // side: buy, sell
+  // posSide: long, short
+  // ordType: market, limit, post_only, fok, ioc
+  order(instId, side, posSide, ordType, sz/* size */, px/* price */, clOrdId, tdMode = 'cross') {
+    return this.post1('/api/v5/trade/order', { instId, tdMode, clOrdId, side, posSide, ordType, sz, px });
+  }
+
+  cancelOrder(instId, ordId) {
+    return this.post1('/api/v5/trade/cancel-order', { instId, ordId });
   }
 
   getSignedHeader(method, path, params) {
@@ -54,8 +65,13 @@ class HttpApi {
       path += '?' + qs.encode(params);
     }
 
-    const { data } = await this._http.get(path, { headers: this.getSignedHeader('GET', path) });
+    const { data: { data } } = await this._http.get(path, { headers: this.getSignedHeader('GET', path) });
     return data;
+  }
+
+  async get1(path, params) {
+    const [ret] = await this.get(path, params);
+    return ret;
   }
 
   async post(path, body) {
@@ -64,8 +80,13 @@ class HttpApi {
       'Content-Type': 'application/json'
     };
 
-    const { data } = await this._http.post(path, body, { headers });
+    const { data: { data } } = await this._http.post(path, body, { headers });
     return data;
+  }
+
+  async post1(path, body) {
+    const [ret] = await this.post(path, body);
+    return ret;
   }
 }
 
