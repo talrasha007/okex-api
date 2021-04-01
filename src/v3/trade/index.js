@@ -1,4 +1,5 @@
-const _ = require('lodash');
+const crypto = require('crypto');
+const _ = require('co-lodash');
 const { EventEmitter } = require('events');
 
 const Order = require('./order');
@@ -60,14 +61,20 @@ class Trade extends EventEmitter {
     return Array.from(this._accounts.values());
   }
 
-  async order(instrument_id, type, price, size, match_price, client_oid, waitForComplete = false) {
+  async order(instrument_id, type, price, size, match_price, waitForComplete = false) {
+    const client_oid = crypto.randomBytes(16).toString('hex');
     if (_.isBoolean(_.last(arguments))) waitForComplete = _.last(arguments);
 
     const tradeType = instrument_id.endsWith('SWAP') ? 'swap' : 'futures';
-    if (waitForComplete) await this._subscribe(instrument_id);
-    const order = new Order(this, await this._httpApi[tradeType].order(instrument_id, type, price, size, match_price, client_oid));
-    if (waitForComplete) await order.waitForFinish();
-    return order;
+    if (waitForComplete) {
+      await this._subscribe(instrument_id);
+      const order = new Order(this, client_oid);
+      order.setData(await this._httpApi[tradeType].order(instrument_id, type, price, size, match_price, client_oid));
+      await order.waitForFinish();
+      return order;
+    } else {
+      return await this._httpApi[tradeType].order(instrument_id, type, price, size, match_price, client_oid);
+    }
   }
 
   async load() {

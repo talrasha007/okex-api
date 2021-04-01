@@ -1,6 +1,6 @@
 {
   "name": "okex-api",
-  "version": "0.8.1",
+  "version": "0.9.0",
   "description": "okex api for both node & frontend",
   "main": "index.js",
   "scripts": {
@@ -23,7 +23,7 @@
   "dependencies": {
     "async-ws": "0.1.1",
     "axios": "^0.21.1",
-    "lodash": "^4.17.21",
+    "co-lodash": "^0.2.0",
     "pako": "^2.0.3"
   },
   "devDependencies": {
