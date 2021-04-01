@@ -23,11 +23,11 @@ class HttpApi {
   }
 
   getAccountConfig() {
-    return this.get('/api/v5/account/config');
+    return this.get1('/api/v5/account/config');
   }
 
   getAccounts(coins) {
-    return this.get('/api/v5/account/balance', { ccy: coins });
+    return this.get1('/api/v5/account/balance', { ccy: coins });
   }
 
   // instType: MARGIN, SWAP, FUTURES, OPTION
