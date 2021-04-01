@@ -17,7 +17,12 @@ class HttpApi {
     this._signer = new Signer(newApiSecret, 'v5');
   }
 
-  getConfig() {
+  async getTickers(instType) {
+    const { data } = await this._http.get('/api/v5/market/tickers', { params: { instType } });
+    return data;
+  }
+
+  getAccountConfig() {
     return this.get('/api/v5/account/config');
   }
 
