@@ -1,7 +1,7 @@
-const WsApi = require('./src/ws-api');
-const HttpApi = require('./src/http-api');
 
 module.exports = {
-  WsApi,
-  HttpApi
+  v3: {
+    HttpApi: require('./src/v3/http-api'),
+    WsApi: require('./src/v3/ws-api')
+  }
 };
