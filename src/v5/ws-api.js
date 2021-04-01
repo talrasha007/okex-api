@@ -10,6 +10,7 @@ class WsApi extends EventEmitter {
 
     this._public = new WS('wss://ws.okex.com:8443/ws/v5/public');
     this._public.on('message', message => {
+      if (message.data) message = message.data;
       if (message !== 'pong') {
         const data = JSON.parse(message);
         if (data.event) {
