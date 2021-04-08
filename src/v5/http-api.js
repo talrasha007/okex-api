@@ -42,7 +42,7 @@ class HttpApi {
   }
 
   getOrder(instId, ordId, clOrdId) {
-    return this.get('/api/v5/trade/order', { instId, ordId, clOrdId});
+    return this.get1('/api/v5/trade/order', { instId, ordId, clOrdId});
   }
 
   batchOrder(orders) {
