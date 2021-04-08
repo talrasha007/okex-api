@@ -13,4 +13,7 @@ const { httpApi } = require('./api');
   for (const o of orders) {
     console.log('canceled: ', await httpApi.cancelOrder('ETH-USD-' + o.clOrdId.replace('AAA', ''), o.ordId));
   }
+
+  const { ordId } = orders[0];
+  console.log(await httpApi.getOrder('ETH-USD-SWAP', ordId));
 })().catch(e => console.error(e.stack));

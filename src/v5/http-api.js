@@ -41,6 +41,10 @@ class HttpApi {
     return this.post1('/api/v5/trade/order', { instId, tdMode, clOrdId, side, posSide, ordType, sz, px });
   }
 
+  getOrder(instId, ordId, clOrdId) {
+    return this.get('/api/v5/trade/order', { instId, ordId, clOrdId});
+  }
+
   batchOrder(orders) {
     return this.post('/api/v5/trade/batch-orders', orders);
   }
