@@ -9,6 +9,7 @@ class WsApi extends EventEmitter {
     super();
 
     this._public = new WS('wss://ws.okex.com:8443/ws/v5/public');
+    this._public.on('error', console.error);
     this._public.on('message', message => {
       if (message.data) message = message.data;
       if (message !== 'pong') {
@@ -16,7 +17,7 @@ class WsApi extends EventEmitter {
         if (data.event) {
           this.emit(data.event, data.arg || data.msg);
         } else if (data.arg) {
-          this.emit(data.arg.channel, data.data);
+          this.emit(data.arg.channel, data.data, data.arg);
         }
       }
     });
@@ -33,7 +34,8 @@ class WsApi extends EventEmitter {
     this.passphrase = newPassphrase;
   }
 
-  subscribePublic(channel) {
+  subscribePublic(channel, sendOnReconnect = false) {
+    if (sendOnReconnect) this._public.on('open', () => this._public.send(JSON.stringify({ op: 'subscribe', args: Array.isArray(channel)? channel : [channel] })));
     return this._public.send(JSON.stringify({ op: 'subscribe', args: Array.isArray(channel)? channel : [channel] }));
   }
 }
