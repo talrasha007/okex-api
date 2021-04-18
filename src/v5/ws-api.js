@@ -141,7 +141,7 @@ class WsApi extends EventEmitter {
     });
   }
 
-  toOrder(instId, side, posSide, ordType, sz/* size */, px/* price */, clOrdId = crypto.randomBytes(16).toString('hex'), tdMode = 'cross') {
+  toOrder(instId, side, posSide, ordType, sz/* size */, px/* price */, clOrdId, tdMode = 'cross') {
     return { instId, tdMode, clOrdId, side, posSide, ordType, sz, px };
   }
 }
