@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const { EventEmitter } = require('events');
 const WS = require('async-ws');
 
@@ -12,7 +13,9 @@ class WsApi extends EventEmitter {
       if (message.data) message = message.data;
       if (message !== 'pong') {
         const data = JSON.parse(message);
-        if (data.op) {
+        if (data.event) {
+          this.emit(data.event, data);
+        } else if (data.op) {
           this.emit(`op:${data.op}`, data.data || data.args, { id: data.id, msg: data.msg, code: data.code });
         } else if (data.arg) {
           this.emit(data.arg.channel, data.data, data.arg);
@@ -64,7 +67,7 @@ class WsApi extends EventEmitter {
 
     if (sendOnReconnect) this.on('login', () => this._private.send(msg));
 
-    if (this.loggedIn) await this._private.send(JSON.stringify());
+    if (this.loggedIn) await this._private.send(msg);
     else this.once('login', () => this._private.send(msg));
   }
 
@@ -94,6 +97,34 @@ class WsApi extends EventEmitter {
     const id = crypto.randomBytes(16).toString('hex');
     this._private.send(JSON.stringify({ id, op: 'batch-cancel-orders', args: orders }));
     return this.waitForOp('batch-cancel-orders', id);
+  }
+
+  waitForOrders(orders, states = ['canceled', 'filled'], timeout = 5000) {
+    return new Promise((resolve, reject) => {
+      const listener = ([orderData]) => {
+        let ok = true;
+        for (const order of orders) {
+          if (order.ordId === orderData.ordId) {
+            Object.assign(order, orderData);
+          }
+
+          if (states.indexOf(order.state) < 0 && !order.sMsg) ok = false;
+        }
+
+        if (ok) {
+          clearTimeout(tid);
+          this.off('orders', listener);
+          resolve(orders);
+        }
+      };
+
+      const tid = setTimeout(() => {
+        this.off('orders', listener);
+        reject('timeout');
+      }, timeout);
+
+      this.on('orders', listener);
+    });
   }
 
   toOrder(instId, side, posSide, ordType, sz/* size */, px/* price */, clOrdId = crypto.randomBytes(16).toString('hex'), tdMode = 'cross') {
