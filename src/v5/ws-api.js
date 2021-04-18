@@ -46,6 +46,11 @@ class WsApi extends EventEmitter {
 
       this._private.on('message', processMsg);
       this.on('login', () => this.loggedIn = true);
+
+      this._orders = new Map();
+      this.on('orders', ([order]) => {
+        this._orders.set(order.ordId, order);
+      });
     }
   }
 
@@ -80,7 +85,7 @@ class WsApi extends EventEmitter {
           this.off(op, listener);
           code *= 1;
           if (code === 0 || code === 2) resolve(data);
-          else reject({ code, msg });
+          else reject({ code, msg, data });
         }
       };
       this.on(op, listener);
@@ -101,11 +106,20 @@ class WsApi extends EventEmitter {
 
   waitForOrders(orders, states = ['canceled', 'filled'], timeout = 5000) {
     return new Promise((resolve, reject) => {
+      let allOk = true;
+      for (const order of orders) {
+        Object.assign(order, this._orders.get(order.ordId) || {});
+        this._orders.delete(order.ordId);
+        if (states.indexOf(order.state) < 0 && !order.sMsg) allOk = false;
+      }
+      if (allOk) return resolve(orders);
+
       const listener = ([orderData]) => {
         let ok = true;
         for (const order of orders) {
           if (order.ordId === orderData.ordId) {
             Object.assign(order, orderData);
+            this._orders.delete(order.ordId);
           }
 
           if (states.indexOf(order.state) < 0 && !order.sMsg) ok = false;
