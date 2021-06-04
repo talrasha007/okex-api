@@ -52,6 +52,11 @@ class WsApi extends EventEmitter {
         this._orders.set(order.ordId, order);
       });
     }
+
+    setInterval(() => {
+      if (this._public._ready) this._public.send('ping');
+      if (this._private && this._private._ready) this._private.send('ping')
+    }, 15000);
   }
 
   update(newApiKey, newApiSecret, newPassphrase) {
