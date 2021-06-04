@@ -76,18 +76,23 @@ class WsApi extends EventEmitter {
     else this.once('login', () => this._private.send(msg));
   }
 
-  waitForOp(op, opId) {
+  waitForOp(op, opId, timeout = 5000) {
     op = `op:${op}`;
 
     return new Promise((resolve, reject) => {
+      const tm = setTimeout(() => reject('timeout'), timeout);
+
       const listener = (data, { id, code, msg }) => {
         if (id === opId) {
+          clearTimeout(tm);
+          
           this.off(op, listener);
           code *= 1;
           if (code === 0 || code === 2) resolve(data);
           else reject({ code, msg, data });
         }
       };
+
       this.on(op, listener);
     });
   }
