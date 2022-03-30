@@ -11,6 +11,7 @@ class WsApi extends EventEmitter {
 
     const processMsg = message => {
       if (message.data) message = message.data;
+      if (message.toString) message = message.toString();
       if (message !== 'pong') {
         const data = JSON.parse(message);
         if (data.event) {
