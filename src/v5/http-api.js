@@ -16,6 +16,12 @@ class HttpApi {
     this._signer = new Signer(newApiSecret, 'v5');
   }
 
+  // instType: SPOT/MARGIN/SWAP/FUTURES/OPTION
+  async getInstruments(instType) {
+    const { data: { data } }  = await this._http.get('/api/v5/public/instruments', { params: { instType } });
+    return data;
+  }
+
   async getTickers(instType) {
     const { data: { data } } = await this._http.get('/api/v5/market/tickers', { params: { instType } });
     return data;
