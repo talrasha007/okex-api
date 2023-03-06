@@ -24,13 +24,13 @@ class WsApi extends EventEmitter {
       }
     };
 
-    this._public = new WS('wss://wsaws.okx.com:8443/ws/v5/public');
+    this._public = new WS('wss://ws.okx.com:8443/ws/v5/public');
     this._public.on('error', console.error);
     this._public.on('message', processMsg);
 
     if (apiSecret) {
       this.update(apiKey, apiSecret, passphrase);
-      this._private = new WS('wss://wsaws.okx.com:8443/ws/v5/private');
+      this._private = new WS('wss://ws.okx.com:8443/ws/v5/private');
       this._private.on('error', console.error);
       this._private.on('open', () => {
         const [timestamp, sign] = this.signer.sign('/users/self/verify');

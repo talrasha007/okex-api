@@ -5,7 +5,7 @@ const Signer = require('../signer');
 class HttpApi {
   constructor(apiKey, apiSecret, passphrase, opt = {}) {
     if (arguments.length === 1) opt = apiKey;
-    opt.baseURL = opt.baseURL || 'https://aws.okx.com';
+    opt.baseURL = opt.baseURL || 'https://www.okx.com';
 
     this.update(apiKey, apiSecret, passphrase);
     this._http = axios.create(opt);
