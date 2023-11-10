@@ -10,7 +10,7 @@ const { wsApi } = require('./api');
 
   console.log(await wsApi.subscribePublic([{
     "channel" : "tickers",
-    "instId": "ETH-USD-210625"
+    "instId": "ETH-USD-240329"
   }, {
     "channel" : "tickers",
     "instId": "ETH-USD-SWAP"
