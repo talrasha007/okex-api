@@ -121,7 +121,7 @@ class WsApi extends EventEmitter {
       for (const order of orders) {
         Object.assign(order, this._orders.get(order.ordId) || {});
         this._orders.delete(order.ordId);
-        if (states.indexOf(order.state) < 0 && !order.sMsg) allOk = false;
+        if (states.indexOf(order.state) < 0 && order.sCode == 0) allOk = false;
       }
       if (allOk) return resolve(orders);
 
@@ -133,7 +133,7 @@ class WsApi extends EventEmitter {
             this._orders.delete(order.ordId);
           }
 
-          if (states.indexOf(order.state) < 0 && !order.sMsg) ok = false;
+          if (states.indexOf(order.state) < 0 && order.sCode == 0) ok = false;
         }
 
         if (ok) {
