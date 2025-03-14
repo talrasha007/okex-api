@@ -317,12 +317,8 @@ export class HttpApi {
     return this.getPrivate('/api/v5/account/instruments', params);
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  getBalance(ccy?: string): Promise<AccountBalance[]> {
-    return this.getPrivate('/api/v5/account/balance', { ccy });
+  getBalance(params?: { ccy?: string }): Promise<AccountBalance[]> {
+    return this.getPrivate('/api/v5/account/balance', { ...params });
   }
 
   getPositions(params?: GetPositionsParams): Promise<AccountPosition[]> {
@@ -335,16 +331,10 @@ export class HttpApi {
     return this.getPrivate('/api/v5/account/positions-history', params);
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
   getAccountPositionRisk(
-    instType?: Omit<'SPOT', InstrumentType>,
+    params?: { instType?: Omit<'SPOT', InstrumentType> }
   ): Promise<AccountPositionRisk[]> {
-    return this.getPrivate('/api/v5/account/account-position-risk', {
-      instType,
-    });
+    return this.getPrivate('/api/v5/account/account-position-risk', { ...params });
   }
 
   /** Up to last 7 days */
@@ -387,12 +377,8 @@ export class HttpApi {
     return this.getPrivate('/api/v5/account/config');
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  setPositionMode(posMode: PosMode): Promise<AccountPositionModeResult[]> {
-    return this.postPrivate('/api/v5/account/set-position-mode', { posMode });
+  setPositionMode(params: { posMode: PosMode }): Promise<AccountPositionModeResult[]> {
+    return this.postPrivate('/api/v5/account/set-position-mode', params);
   }
 
   setLeverage(params: SetLeverageRequest): Promise<AccountLeverageResult[]> {
@@ -427,15 +413,8 @@ export class HttpApi {
     return this.postPrivate('/api/v5/account/position/margin-balance', params);
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  getLeverage(instId: string, mgnMode: MarginMode): Promise<AccountLeverage[]> {
-    return this.getPrivate('/api/v5/account/leverage-info', {
-      instId,
-      mgnMode,
-    });
+  getLeverage(params: { instId: string, mgnMode: MarginMode }): Promise<AccountLeverage[]> {
+    return this.getPrivate('/api/v5/account/leverage-info', params);
   }
 
   getLeverageV2(params: {
@@ -457,22 +436,13 @@ export class HttpApi {
     return this.getPrivate('/api/v5/account/adjust-leverage-info', params);
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  getMaxLoan(
+  getMaxLoan(params: {
     instId: string,
     mgnMode: MarginMode,
     mgnCcy?: string | undefined,
     ccy?: string,
-  ): Promise<AccountMaxLoan[]> {
-    return this.getPrivate('/api/v5/account/max-loan', {
-      instId,
-      mgnMode,
-      mgnCcy,
-      ccy,
-    });
+  }): Promise<AccountMaxLoan[]> {
+    return this.getPrivate('/api/v5/account/max-loan', params);
   }
 
   getMaxLoanV2(params: {
@@ -484,24 +454,14 @@ export class HttpApi {
     return this.getPrivate('/api/v5/account/max-loan', params);
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  getFeeRates(
+  getFeeRates(params: {
     instType: InstrumentType,
     instId?: string,
     uly?: string,
     instFamily?: string,
     ruleType?: string,
-  ): Promise<AccountFeeRate[]> {
-    return this.getPrivate('/api/v5/account/trade-fee', {
-      instType,
-      instId,
-      uly,
-      instFamily,
-      ruleType,
-    });
+  }): Promise<AccountFeeRate[]> {
+    return this.getPrivate('/api/v5/account/trade-fee', params);
   }
 
   getFeeRatesV2(params: {
@@ -526,42 +486,23 @@ export class HttpApi {
     return this.getPrivate('/api/v5/account/interest-accrued', params);
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  getInterestRate(ccy?: string): Promise<InterestRate[]> {
-    return this.getPrivate('/api/v5/account/interest-rate', { ccy });
+  getInterestRate(params?: { ccy?: string }): Promise<InterestRate[]> {
+    return this.getPrivate('/api/v5/account/interest-rate', { ...params });
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  setGreeksDisplayType(greeksType: 'PA' | 'BS'): Promise<Greeks[]> {
-    return this.postPrivate('/api/v5/account/set-greeks', { greeksType });
+  setGreeksDisplayType(params: { greeksType: 'PA' | 'BS' }): Promise<Greeks[]> {
+    return this.postPrivate('/api/v5/account/set-greeks', params);
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  setIsolatedMode(
+  setIsolatedMode(params: {
     isoMode: 'automatic' | 'autonomy',
     type: 'MARGIN' | 'CONTRACTS',
-  ): Promise<AccountIsolatedMode[]> {
-    return this.postPrivate('/api/v5/account/set-isolated-mode', {
-      isoMode,
-      type,
-    });
+  }): Promise<AccountIsolatedMode[]> {
+    return this.postPrivate('/api/v5/account/set-isolated-mode', params);
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  getMaxWithdrawals(ccy?: string): Promise<MaxWithdrawal[]> {
-    return this.getPrivate('/api/v5/account/max-withdrawal', { ccy });
+  getMaxWithdrawals(params?: { ccy?: string }): Promise<MaxWithdrawal[]> {
+    return this.getPrivate('/api/v5/account/max-withdrawal', { ...params });
   }
 
   getAccountRiskState(): Promise<AccountRiskState[]> {
@@ -586,22 +527,13 @@ export class HttpApi {
     );
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  borrowRepayVIPLoan(
+  borrowRepayVIPLoan(params: {
     ccy: string,
     side: 'borrow' | 'repay',
     amt: numberInString,
     ordId?: string,
-  ): Promise<any[]> {
-    return this.postPrivate('/api/v5/account/borrow-repay', {
-      ccy,
-      side,
-      amt,
-      ordId,
-    });
+  }): Promise<any[]> {
+    return this.postPrivate('/api/v5/account/borrow-repay', params);
   }
 
   getVIPLoanBorrowRepayHistory(params?: any): Promise<any[]> {
@@ -780,12 +712,8 @@ export class HttpApi {
     return this.postPrivate('/api/v5/account/set-riskOffset-amt', params);
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  getGreeks(ccy?: string): Promise<any[]> {
-    return this.getPrivate('/api/v5/account/greeks', { ccy });
+  getGreeks(params?: { ccy?: string }): Promise<any[]> {
+    return this.getPrivate('/api/v5/account/greeks', { ...params });
   }
 
   getPMLimitation(params: {
@@ -938,10 +866,6 @@ export class HttpApi {
   }
 
   /**
-   *
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   *
    * Place easy convert : Convert small currencies to mainstream currencies.
    * Only applicable to the crypto balance less than $10.
    *
@@ -949,16 +873,12 @@ export class HttpApi {
    * If there are multiple currencies, separate them with commas in the "from" field.
    *
    */
-  submitEasyConvert(
-    fromCcys: string[],
+  submitEasyConvert(params: {
+    fromCcy: string[],
     toCcy: string,
     source?: string,
-  ): Promise<APIResponse<any>> {
-    return this.postPrivate('/api/v5/trade/easy-convert', {
-      fromCcy: fromCcys,
-      toCcy,
-      source,
-    });
+  }): Promise<APIResponse<any>> {
+    return this.postPrivate('/api/v5/trade/easy-convert', params);
   }
 
   /** Get easy convert history : Get the history and status of easy convert trades. */
@@ -967,36 +887,27 @@ export class HttpApi {
   }
 
   /**
-   *
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   *
    * Get one-click repay currency list : Get list of debt currency data and repay currencies.
    * Debt currencies include both cross and isolated debts.
    */
-  getOneClickRepayCurrencyList(
+  getOneClickRepayCurrencyList(params?: {
     debtType?: 'cross' | 'isolated',
-  ): Promise<APIResponse<any>> {
-    return this.getPrivate('/api/v5/trade/one-click-repay-currency-list', {
-      debtType,
-    });
+  }): Promise<APIResponse<any>> {
+    return this.getPrivate('/api/v5/trade/one-click-repay-currency-list', { ...params });
   }
 
   /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   *
    * Trade one-click repay to repay cross debts.
    * Isolated debts are not applicable.
    * The maximum repayment amount is based on the remaining available balance of funding and trading accounts.
    */
-  submitOneClickRepay(
+  submitOneClickRepay(params: {
     debtCcys: string[],
     repayCcy: string,
-  ): Promise<APIResponse<any>> {
+  }): Promise<APIResponse<any>> {
     return this.postPrivate('/api/v5/trade/one-click-repay', {
-      debtCcy: debtCcys.join(','),
-      repayCcy,
+      debtCcy: params.debtCcys.join(','),
+      repayCcy: params.repayCcy,
     });
   }
 
@@ -1088,20 +999,13 @@ export class HttpApi {
     return this.postPrivate('/api/v5/tradingBot/grid/order-algo', params);
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  amendGridAlgoOrder(
+  amendGridAlgoOrder(params: {
     algoId: string,
     instId: string,
-    triggerPx: { slTriggerPx?: numberInString; tpTriggerPx?: numberInString },
-  ): Promise<any[]> {
-    return this.postPrivate('/api/v5/tradingBot/grid/amend-order-algo', {
-      algoId,
-      instId,
-      ...triggerPx,
-    });
+    slTriggerPx?: numberInString,
+    tpTriggerPx?: numberInString,
+  }): Promise<any[]> {
+    return this.postPrivate('/api/v5/tradingBot/grid/amend-order-algo', params);
   }
 
   stopGridAlgoOrder(orders: StopGridAlgoOrderRequest[]): Promise<any[]> {
@@ -1150,98 +1054,51 @@ export class HttpApi {
     );
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  getGridAlgoOrderDetails(
+  getGridAlgoOrderDetails(params: {
     algoOrdType: GridAlgoOrderType,
     algoId: string,
-  ): Promise<any[]> {
-    return this.getPrivate('/api/v5/tradingBot/grid/orders-algo-details', {
-      algoOrdType,
-      algoId,
-    });
+  }): Promise<any[]> {
+    return this.getPrivate('/api/v5/tradingBot/grid/orders-algo-details', params);
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  getGridAlgoSubOrders(
+  getGridAlgoSubOrders(params: {
     algoOrdType: GridAlgoOrderType,
     algoId: string,
     type: GridAlgoSubOrderType,
     groupId?: string,
-    pagination?: {
-      after?: numberInString;
-      before?: numberInString;
-      limit?: number;
-    },
-  ): Promise<any[]> {
-    return this.getPrivate('/api/v5/tradingBot/grid/sub-orders', {
-      algoOrdType,
-      algoId,
-      type,
-      groupId,
-      ...pagination,
-    });
+    after?: numberInString,
+    before?: numberInString,
+    limit?: number,
+  }): Promise<any[]> {
+    return this.getPrivate('/api/v5/tradingBot/grid/sub-orders', params);
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  getGridAlgoOrderPositions(
+  getGridAlgoOrderPositions(params: {
     algoOrdType: 'contract_grid',
     algoId: string,
-  ): Promise<any[]> {
-    return this.getPrivate('/api/v5/tradingBot/grid/positions', {
-      algoOrdType,
-      algoId,
-    });
+  }): Promise<any[]> {
+    return this.getPrivate('/api/v5/tradingBot/grid/positions', params);
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  spotGridWithdrawIncome(algoId: string): Promise<any[]> {
-    return this.postPrivate('/api/v5/tradingBot/grid/withdraw-income', {
-      algoId,
-    });
+  spotGridWithdrawIncome(params: { algoId: string }): Promise<any[]> {
+    return this.postPrivate('/api/v5/tradingBot/grid/withdraw-income', params);
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  computeGridMarginBalance(
+  computeGridMarginBalance(params: {
     algoId: string,
     type: 'add' | 'reduce',
     amt?: numberInString,
-  ): Promise<any[]> {
-    return this.postPrivate('/api/v5/tradingBot/grid/compute-margin-balance', {
-      algoId,
-      type,
-      amt,
-    });
+  }): Promise<any[]> {
+    return this.postPrivate('/api/v5/tradingBot/grid/compute-margin-balance', params);
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  adjustGridMarginBalance(
+  adjustGridMarginBalance(params: {
     algoId: string,
     type: 'add' | 'reduce',
-    change: { amt?: numberInString; percent?: numberInString },
-  ): Promise<any[]> {
-    return this.postPrivate('/api/v5/tradingBot/grid/margin-balance', {
-      algoId,
-      type,
-      ...change,
-    });
+    amt?: numberInString,
+    percent?: numberInString
+  }): Promise<any[]> {
+    return this.postPrivate('/api/v5/tradingBot/grid/margin-balance', params);
   }
 
   adjustGridInvestment(params: { algoId: string; amt: string }): Promise<
@@ -1255,22 +1112,13 @@ export class HttpApi {
     );
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  getGridAIParameter(
+  getGridAIParameter(params: {
     algoOrdType: GridAlgoOrderType,
     instId: string,
     direction: ContractGridDirection,
     duration?: '7D' | '30D' | '180D',
-  ): Promise<any[]> {
-    return this.get('/api/v5/tradingBot/grid/ai-param', {
-      algoOrdType,
-      instId,
-      direction,
-      duration,
-    });
+  }): Promise<any[]> {
+    return this.get('/api/v5/tradingBot/grid/ai-param', params);
   }
 
   computeGridMinInvestment(params: {
@@ -2339,12 +2187,8 @@ export class HttpApi {
     return this.get('/api/v5/market/exchange-rate');
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  getIndexComponents(index: string): Promise<any[]> {
-    return this.get('/api/v5/market/index-components', { index });
+  getIndexComponents(params: { index: string }): Promise<any[]> {
+    return this.get('/api/v5/market/index-components', params);
   }
 
   getEconomicCalendar(
