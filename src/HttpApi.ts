@@ -282,8 +282,9 @@ export class HttpApi {
   private async getPrivate<T>(path: string, params: any = {}) {
     if (!this.credentials) throw new Error('Missing credentials');
 
-    const headers = await this.credentials.getHttpHeaders('GET', path);
-    const response = await fetch(this.getUrl(path, params), { headers });
+    const url = this.getUrl(path, params);
+    const headers = await this.credentials.getHttpHeaders('GET', path, url.search);
+    const response = await fetch(url, { headers });
     return this.getResponseData(await response.json()) as T;
   }
 

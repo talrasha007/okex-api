@@ -4,7 +4,7 @@ class Signer {
 
   async sign(path: string, params = '', method: 'GET' | 'POST' = 'GET') {
     const timestamp = new Date().toISOString();
-    const message = `${timestamp}${method}${path}${params && JSON.stringify(params)}`;
+    const message = `${timestamp}${method}${path}${params}`;
     const sign = await crypto.subtle.sign('HMAC', this.cryptoKey, new TextEncoder().encode(message));
     return { timestamp, sign: btoa(String.fromCharCode(...new Uint8Array(sign))) };
   }
