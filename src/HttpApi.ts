@@ -1636,33 +1636,16 @@ export class HttpApi {
    *
    */
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  getTickers(instrumentType: InstrumentType, uly?: string): Promise<Ticker[]> {
-    return this.get('/api/v5/market/tickers', {
-      instType: instrumentType,
-      uly,
-    });
+  getTickers(params: { instType: InstrumentType, uly?: string }): Promise<Ticker[]> {
+    return this.get('/api/v5/market/tickers', params);
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  getTicker(instId: string): Promise<Ticker[]> {
-    return this.get('/api/v5/market/ticker', {
-      instId,
-    });
+  getTicker(params: { instId: string }): Promise<Ticker[]> {
+    return this.get('/api/v5/market/ticker', params);
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  getOrderBook(instId: string, sz?: numberInString): Promise<OrderBook[]> {
-    return this.get('/api/v5/market/books', { instId, sz });
+  getOrderBook(params: { instId: string, sz?: numberInString }): Promise<OrderBook[]> {
+    return this.get('/api/v5/market/books', params);
   }
 
   getFullOrderBook(params: {
@@ -1672,15 +1655,11 @@ export class HttpApi {
     return this.get('/api/v5/market/books-full', params);
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  getCandles(
+  getCandles({ instId, bar = '1m', pagination }: {
     instId: string,
-    bar: string = '1m',
+    bar?: string,
     pagination?: Pagination,
-  ): Promise<Candle[]> {
+  }): Promise<Candle[]> {
     return this.get('/api/v5/market/candles', {
       instId,
       bar,
@@ -1692,15 +1671,11 @@ export class HttpApi {
     return this.get('/api/v5/market/candles', params);
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  getHistoricCandles(
+  getHistoricCandles({ instId, bar = '1m', pagination }: {
     instId: string,
-    bar: string = '1m',
+    bar: string,
     pagination?: Pagination,
-  ): Promise<Candle[]> {
+  }): Promise<Candle[]> {
     return this.get('/api/v5/market/history-candles', {
       instId,
       bar,
@@ -1712,28 +1687,18 @@ export class HttpApi {
     return this.get('/api/v5/market/history-candles', params);
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  getTrades(instId: string, limit?: number): Promise<Trade[]> {
-    return this.get('/api/v5/market/trades', { instId, limit });
+  getTrades(params: { instId: string, limit?: number }): Promise<Trade[]> {
+    return this.get('/api/v5/market/trades', params);
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  getHistoricTrades(
-    instId: string,
-    pagination?: {
-      after?: numberInString;
-      before?: numberInString;
-      limit?: numberInString;
-      type?: '1' | '2';
-    },
-  ): Promise<Trade[]> {
-    return this.get('/api/v5/market/history-trades', { instId, ...pagination });
+  getHistoricTrades(params: {
+    instId: string;
+    after?: numberInString;
+    before?: numberInString;
+    limit?: numberInString;
+    type?: '1' | '2';
+  }): Promise<Trade[]> {
+    return this.get('/api/v5/market/history-trades', params);
   }
 
   getOptionTradesByInstrument(params: {
@@ -1863,20 +1828,12 @@ export class HttpApi {
     return this.get('/api/v5/rfq/public-trades', params);
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  getBlockTickers(instType: InstrumentType, uly?: string): Promise<any[]> {
-    return this.get('/api/v5/market/block-tickers', { instType, uly });
+  getBlockTickers(params: { instType: InstrumentType, uly?: string }): Promise<any[]> {
+    return this.get('/api/v5/market/block-tickers', params);
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  getBlockTicker(instId: string): Promise<any[]> {
-    return this.get('/api/v5/market/block-ticker', { instId });
+  getBlockTicker(params: { instId: string }): Promise<any[]> {
+    return this.get('/api/v5/market/block-ticker', params);
   }
 
   getBlockPublicTrades(params: {
@@ -1993,22 +1950,13 @@ export class HttpApi {
    *
    */
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  getInstruments(
+  getInstruments(params: {
     instType: InstrumentType,
     uly?: string,
     instFamily?: string,
     instId?: string,
-  ): Promise<Instrument[]> {
-    return this.get('/api/v5/public/instruments', {
-      instType,
-      uly,
-      instFamily,
-      instId,
-    });
+  }): Promise<Instrument[]> {
+    return this.get('/api/v5/public/instruments', params);
   }
 
   getDeliveryExerciseHistory(params: any): Promise<any[]> {
@@ -2086,26 +2034,18 @@ export class HttpApi {
     return this.get('/api/v5/public/premium-history', params);
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  getIndexTickers(params: {
+  getIndexTickers(params?: {
     quoteCcy?: string;
     instId?: string;
   }): Promise<IndexTicker[]> {
     return this.get('/api/v5/market/index-tickers', { ...params });
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  getIndexCandles(
+  getIndexCandles({ instId, bar = '1m', pagination }: {
     instId: string,
-    bar: string = '1m',
+    bar: string,
     pagination?: Pagination,
-  ): Promise<CandleNoVolume[]> {
+  }): Promise<CandleNoVolume[]> {
     return this.get('/api/v5/market/index-candles', {
       instId,
       bar,
@@ -2117,15 +2057,11 @@ export class HttpApi {
     return this.get('/api/v5/market/index-candles', params);
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  getHistoricIndexCandles(
+  getHistoricIndexCandles({ instId, bar = '1m', pagination }: {
     instId: string,
-    bar: string = '1m',
+    bar: string,
     pagination?: Pagination,
-  ): Promise<CandleNoVolume[]> {
+  }): Promise<CandleNoVolume[]> {
     return this.get('/api/v5/market/history-index-candles', {
       instId,
       bar,
@@ -2137,15 +2073,11 @@ export class HttpApi {
     return this.get('/api/v5/market/history-index-candles', params);
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  getMarkPriceCandles(
+  getMarkPriceCandles({ instId, bar = '1m', pagination }: {
     instId: string,
-    bar: string = '1m',
+    bar: string,
     pagination?: Pagination,
-  ): Promise<CandleNoVolume[]> {
+  }): Promise<CandleNoVolume[]> {
     return this.get('/api/v5/market/mark-price-candles', {
       instId,
       bar,
@@ -2157,15 +2089,11 @@ export class HttpApi {
     return this.get('/api/v5/market/mark-price-candles', params);
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  getHistoricMarkPriceCandles(
+  getHistoricMarkPriceCandles({ instId, bar = '1m', pagination }: {
     instId: string,
-    bar: string = '1m',
+    bar?: string,
     pagination?: Pagination,
-  ): Promise<CandleNoVolume[]> {
+  }): Promise<CandleNoVolume[]> {
     return this.get('/api/v5/market/historic-mark-price-candles', {
       instId,
       bar,
@@ -2197,19 +2125,8 @@ export class HttpApi {
     return this.getPrivate('/api/v5/public/economic-calendar', params);
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  getPublicBlockTrades(instId: string): Promise<any[]> {
-    return this.get('/api/v5/market/block-trades', { instId });
-  }
-
-  /**
-   * @deprecated
-   */
-  getLiquidationOrders(params: any): Promise<any[]> {
-    return this.get('/api/v5/public/liquidation-orders', params);
+  getPublicBlockTrades(params: { instId: string }): Promise<any[]> {
+    return this.get('/api/v5/market/block-trades', params);
   }
 
   /**
@@ -2355,32 +2272,20 @@ export class HttpApi {
    *
    */
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  getCurrencies(ccy?: string): Promise<FundingCurrency[]> {
-    return this.getPrivate('/api/v5/asset/currencies', { ccy });
+  getCurrencies(params?: { ccy?: string }): Promise<FundingCurrency[]> {
+    return this.getPrivate('/api/v5/asset/currencies', { ...params });
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  getBalances(ccy?: string): Promise<FundingBalance[]> {
-    return this.getPrivate('/api/v5/asset/balances', { ccy });
+  getBalances(params?: { ccy?: string }): Promise<FundingBalance[]> {
+    return this.getPrivate('/api/v5/asset/balances', { ...params });
   }
 
   getNonTradableAssets(params?: { ccy?: string }): Promise<NonTradableAsset[]> {
     return this.getPrivate('/api/v5/asset/non-tradable-assets', params);
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  getAccountAssetValuation(ccy?: string): Promise<AccountAssetValuation[]> {
-    return this.getPrivate('/api/v5/asset/asset-valuation', { ccy });
+  getAccountAssetValuation(params: { ccy?: string }): Promise<AccountAssetValuation[]> {
+    return this.getPrivate('/api/v5/asset/asset-valuation', { ...params });
   }
 
   fundsTransfer(params: FundsTransferRequest): Promise<FundTransferResult[]> {
@@ -2407,24 +2312,16 @@ export class HttpApi {
     return this.getPrivate('/api/v5/asset/bills', params);
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  getLightningDeposits(
+  getLightningDeposits(params: {
     ccy: string,
     amt: numberInString,
     to?: '6' | '18',
-  ): Promise<any[]> {
-    return this.getPrivate('/api/v5/asset/deposit-lightning', { ccy, amt, to });
+  }): Promise<any[]> {
+    return this.getPrivate('/api/v5/asset/deposit-lightning', params);
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  getDepositAddress(ccy: string): Promise<any[]> {
-    return this.getPrivate('/api/v5/asset/deposit-address', { ccy });
+  getDepositAddress(params: { ccy: string }): Promise<any[]> {
+    return this.getPrivate('/api/v5/asset/deposit-address', params);
   }
 
   getDepositHistory(params?: any): Promise<any[]> {
@@ -2435,28 +2332,16 @@ export class HttpApi {
     return this.postPrivate('/api/v5/asset/withdrawal', params);
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  submitWithdrawLightning(
+  submitWithdrawLightning(params: {
     ccy: string,
     invoice: string,
     memo?: string,
-  ): Promise<any[]> {
-    return this.postPrivate('/api/v5/asset/withdrawal-lightning', {
-      ccy,
-      invoice,
-      memo,
-    });
+  }): Promise<any[]> {
+    return this.postPrivate('/api/v5/asset/withdrawal-lightning', params);
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  cancelWithdrawal(wdId: string): Promise<any[]> {
-    return this.postPrivate('/api/v5/asset/cancel-withdrawal', { wdId });
+  cancelWithdrawal(params: { wdId: string }): Promise<any[]> {
+    return this.postPrivate('/api/v5/asset/cancel-withdrawal', params);
   }
 
   getWithdrawalHistory(params?: WithdrawalHistoryRequest): Promise<any[]> {
@@ -2467,14 +2352,6 @@ export class HttpApi {
     params: GetDepositWithdrawStatusRequest,
   ): Promise<any[]> {
     return this.getPrivate('/api/v5/asset/deposit-withdraw-status', params);
-  }
-
-  /**
-   * @deprecated
-   * use submitEasyConvert() instead
-   */
-  smallAssetsConvert(ccy: string[]): Promise<any[]> {
-    return this.postPrivate('/api/v5/asset/convert-dust-assets', { ccy });
   }
 
   getExchanges(): Promise<any[]> {
@@ -2493,15 +2370,8 @@ export class HttpApi {
     return this.getPrivate('/api/v5/asset/convert/currencies');
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  getConvertCurrencyPair(fromCcy: string, toCcy: string): Promise<any[]> {
-    return this.getPrivate('/api/v5/asset/convert/currency-pair', {
-      fromCcy,
-      toCcy,
-    });
+  getConvertCurrencyPair(params: { fromCcy: string, toCcy: string }): Promise<any[]> {
+    return this.getPrivate('/api/v5/asset/convert/currency-pair', params);
   }
 
   estimateConvertQuote(params: ConvertQuoteEstimateRequest): Promise<any[]> {
@@ -2527,46 +2397,25 @@ export class HttpApi {
     return this.getPrivate('/api/v5/users/subaccount/list', params);
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  resetSubAccountAPIKey(
-    subAcct: string,
-    apiKey: string,
-    options?: {
-      label?: string;
-      perm?: string;
-      ip?: string;
-    },
-  ): Promise<SubAccountAPIReset[]> {
-    return this.postPrivate('/api/v5/users/subaccount/modify-apikey', {
-      subAcct,
-      apiKey,
-      ...options,
-    });
+  resetSubAccountAPIKey(params: {
+    subAcct: string;
+    apiKey: string;
+    label?: string;
+    perm?: string;
+    ip?: string;
+  }): Promise<SubAccountAPIReset[]> {
+    return this.postPrivate('/api/v5/users/subaccount/modify-apikey', params);
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  getSubAccountBalances(subAcct: string): Promise<SubAccountBalances[]> {
-    return this.getPrivate('/api/v5/account/subaccount/balances', { subAcct });
+  getSubAccountBalances(params: { subAcct: string }): Promise<SubAccountBalances[]> {
+    return this.getPrivate('/api/v5/account/subaccount/balances', params);
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  getSubAccountFundingBalances(
+  getSubAccountFundingBalances(params: {
     subAcct: string,
     ccy?: string,
-  ): Promise<FundingBalance[]> {
-    return this.getPrivate('/api/v5/asset/subaccount/balances', {
-      subAcct,
-      ccy,
-    });
+  }): Promise<FundingBalance[]> {
+    return this.getPrivate('/api/v5/asset/subaccount/balances', params);
   }
 
   getSubAccountMaxWithdrawal(
@@ -2603,28 +2452,15 @@ export class HttpApi {
     return this.postPrivate('/api/v5/asset/subaccount/transfer', params);
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  setSubAccountTransferOutPermission(
+  setSubAccountTransferOutPermission(params: {
     subAcct: string,
-    canTransOut: boolean = true,
-  ): Promise<any[]> {
-    return this.postPrivate('/api/v5/users/subaccount/set-transfer-out', {
-      subAcct,
-      canTransOut,
-    });
+    canTransOut: boolean,
+  }): Promise<any[]> {
+    return this.postPrivate('/api/v5/users/subaccount/set-transfer-out', params);
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  getSubAccountCustodyTradingList(subAcct?: string): Promise<any[]> {
-    return this.getPrivate('/api/v5/users/entrust-subaccount-list', {
-      subAcct,
-    });
+  getSubAccountCustodyTradingList(params?: { subAcct?: string }): Promise<any[]> {
+    return this.getPrivate('/api/v5/users/entrust-subaccount-list', { ...params });
   }
 
   setSubAccountLoanAllocation(
@@ -2665,53 +2501,30 @@ export class HttpApi {
     return this.getPrivate('/api/v5/finance/staking-defi/offers', params);
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  submitStake(
+  submitStake(params: {
     productId: string,
     investData: {
       ccy: string;
       amt: string;
     }[],
     term?: string,
-  ): Promise<any[]> {
-    return this.postPrivate('/api/v5/finance/staking-defi/purchase', {
-      productId,
-      investData,
-      term,
-    });
+  }): Promise<any[]> {
+    return this.postPrivate('/api/v5/finance/staking-defi/purchase', params);
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  redeemStake(
+  redeemStake(params: {
     ordId: string,
     protocolType: 'staking' | 'defi',
     allowEarlyRedeem?: boolean,
-  ): Promise<any[]> {
-    return this.postPrivate('/api/v5/finance/staking-defi/redeem', {
-      ordId,
-      protocolType,
-      allowEarlyRedeem,
-    });
+  }): Promise<any[]> {
+    return this.postPrivate('/api/v5/finance/staking-defi/redeem', params);
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  cancelStakingRequest(
+  cancelStakingRequest(params: {
     ordId: string,
     protocolType: 'staking' | 'defi',
-  ): Promise<any[]> {
-    return this.postPrivate('/api/v5/finance/staking-defi/cancel', {
-      ordId,
-      protocolType,
-    });
+  }): Promise<any[]> {
+    return this.postPrivate('/api/v5/finance/staking-defi/cancel', params);
   }
 
   /** Earn/staking get active orders */
@@ -2790,53 +2603,29 @@ export class HttpApi {
    *
    */
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  getSavingBalance(ccy?: string): Promise<any[]> {
-    return this.getPrivate('/api/v5/finance/savings/balance', { ccy });
+  getSavingBalance(params?: { ccy?: string }): Promise<any[]> {
+    return this.getPrivate('/api/v5/finance/savings/balance', { ...params });
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  savingsPurchaseRedemption(
+  savingsPurchaseRedemption(params: {
     ccy: string,
     amt: numberInString,
     side: 'purchase' | 'redempt',
     rate: numberInString,
-  ): Promise<any[]> {
-    return this.postPrivate('/api/v5/finance/savings/purchase-redempt', {
-      ccy,
-      amt,
-      side,
-      rate,
-    });
+  }): Promise<any[]> {
+    return this.postPrivate('/api/v5/finance/savings/purchase-redempt', params);
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  setLendingRate(ccy: string, rate: numberInString): Promise<any[]> {
-    return this.postPrivate('/api/v5/finance/savings/set-lending-rate', {
-      ccy,
-      rate,
-    });
+  setLendingRate(params: { ccy: string, rate: numberInString }): Promise<any[]> {
+    return this.postPrivate('/api/v5/finance/savings/set-lending-rate', params);
   }
 
   getLendingHistory(params?: PaginatedSymbolRequest): Promise<any[]> {
     return this.getPrivate('/api/v5/finance/savings/lending-history', params);
   }
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  getPublicBorrowInfo(ccy?: string): Promise<any[]> {
-    return this.get('/api/v5/finance/savings/lending-rate-summary', { ccy });
+  getPublicBorrowInfo(params?: { ccy?: string }): Promise<any[]> {
+    return this.get('/api/v5/finance/savings/lending-rate-summary', { ...params });
   }
 
   getPublicBorrowHistory(params?: PaginatedSymbolRequest): Promise<any[]> {
@@ -2960,14 +2749,10 @@ export class HttpApi {
    *
    */
 
-  /**
-   * @deprecated Breaking change: this function will change soon to accept a single object for all REST API parameters.
-   * See issue https://github.com/tiagosiebler/okx-api/issues/88 for more details.
-   */
-  getSystemStatus(
+  getSystemStatus(params?: {
     state?: 'scheduled' | 'ongoing' | 'pre_open' | 'completed' | 'canceled',
-  ): Promise<any[]> {
-    return this.get('/api/v5/system/status', { state });
+  }): Promise<any[]> {
+    return this.get('/api/v5/system/status', { ...params });
   }
 
   /**
