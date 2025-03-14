@@ -43,6 +43,7 @@ export class APICredentials {
   }
 
   public static async create(apiKey: string, apiSecret: string, passphrase: string) {
-    return new APICredentials(apiKey, await Signer.create(apiSecret), passphrase);
+    if (apiKey && apiSecret && passphrase)
+      return new APICredentials(apiKey, await Signer.create(apiSecret), passphrase);
   }
 }
