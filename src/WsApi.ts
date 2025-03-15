@@ -7,18 +7,19 @@ import type {
   WsChannelSubUnSubRequestArg,
   WsDataEvent,
   WsEvent,
+  WsTicker,
 } from './types';
 
 interface WsEventMap {
   close: CloseEvent,
   error: ErrorEvent & WsApiEvent<WsEvent>,
-  ticker: WsApiEvent<string>,
+  tickers: WsApiEvent<WsTicker[]>,
 }
 
 type WsEventMapEx = WsEventMap &
   Record<WsRequestOp, WsApiEvent<WsEvent>> &
   Record<WsTradeOp, WsApiEvent<WsEvent>> &
-  Record<WsChannel, WsApiEvent<WsDataEvent>> &
+  Record<Exclude<WsChannel, 'tickers'>, WsApiEvent<WsDataEvent>> &
   Record<string, Event>;
 
 const wsEvents = new Set(['error', 'login', 'subscribe', 'unsubscribe', 'channel-conn-count']);
