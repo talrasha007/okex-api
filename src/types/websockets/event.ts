@@ -50,6 +50,69 @@ export interface WsTicker {
   ts: string;
 }
 
+export interface WsAccount {
+  adjEq: string;
+  borrowFroz: string;
+  imr: string;
+  isoEq: string;
+  mgnRatio: string;
+  mmr: string;
+  notionalUsd: string;
+  notionalUsdForBorrow: string;
+  notionalUsdForFutures: string;
+  notionalUsdForOption: string;
+  notionalUsdForSwap: string;
+  ordFroz: string;
+  totalEq: string;
+  uTime: string;
+  upl: string;
+  details: {
+    availBal: string;
+    availEq: string;
+    borrowFroz: string;
+    cashBal: string;
+    ccy: string;
+    coinUsdPrice: string;
+    crossLiab: string;
+    collateralEnabled: boolean;
+    disEq: string;
+    eq: string;
+    eqUsd: string;
+    smtSyncEq: string;
+    spotCopyTradingEq: string;
+    fixedBal: string;
+    frozenBal: string;
+    imr: string;
+    interest: string;
+    isoEq: string;
+    isoLiab: string;
+    isoUpl: string;
+    liab: string;
+    maxLoan: string;
+    mgnRatio: string;
+    mmr: string;
+    notionalLever: string;
+    ordFrozen: string;
+    rewardBal: string;
+    spotInUseAmt: string;
+    clSpotInUseAmt: string;
+    maxSpotInUseAmt: string;          
+    spotIsoBal: string;
+    stgyEq: string;
+    twap: string;
+    uTime: string;
+    upl: string;
+    uplLiab: string;
+    spotBal: string;
+    openAvgPx: string;
+    accAvgPx: string;
+    spotUpl: string;
+    spotUplRatio: string;
+    totalPnl: string;
+    totalPnlRatio: string;
+  }[]
+}
+
 export interface WsPosition {
   instType: string;
   instId: string;

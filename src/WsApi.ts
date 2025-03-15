@@ -13,6 +13,7 @@ import type {
   WsOrderArg,
   WsCancelOrderArg,
   WsPosition,
+  WsAccount,
 } from './types';
 
 interface WsEventMap {
@@ -20,6 +21,7 @@ interface WsEventMap {
   error: ErrorEvent & WsApiEvent<WsEvent>,
   tickers: WsApiEvent<WsTicker[]>,
   positions: WsApiEvent<WsPosition[]>,
+  account: WsApiEvent<WsAccount[]>,
 }
 
 type WsEventMapEx = WsEventMap &
