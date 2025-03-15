@@ -58,14 +58,14 @@ export interface WsTradeRequest<T> {
 
 export interface WsOrderArg {
   instId: string;
-  tdMode?: 'isolated' | 'cross' | 'cash' | 'spot_isolated';
+  tdMode: 'isolated' | 'cross' | 'cash' | 'spot_isolated';
   ccy?: string;
   clOrdId?: string;
   tag?: string;
   side: 'buy' | 'sell';
   posSide?: 'net' | 'long' |'short';
   ordType: 'market' | 'limit' | 'post_only' | 'ioc' | 'fok' | 'optimal_limit_ioc' | 'mmp' | 'mmp_and_post_only';
-  px: string;
+  px?: string;
   sz: string;
   reduceOnly?: boolean;
   tgtCcy?: string;

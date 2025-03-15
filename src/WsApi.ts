@@ -35,7 +35,7 @@ class WsApiEvent<T> extends Event {
 }
 
 class WsApi extends EventTarget {
-  private ws?: WebSocket;
+  protected ws?: WebSocket;
   private shouldReconnect = true;
 
   constructor(private url: string) {
@@ -145,15 +145,50 @@ export class WsPrivate extends WsApi {
       throw new Error('No credentials');
   }
 
+  private ready = false;
+
   constructor(private credentials: APICredentials, baseURL = 'wss://ws.okx.com:8443') {
     super(baseURL + '/ws/v5/private');
+
+    this.addEventListener('open', async () => {
+      await super.waitForReady();
+      this.ws!.send(await this.credentials.getWsLoginMessage());
+    });
+
+    this.addEventListener('login', (event) => {
+      if (event.data.code === '0') {
+        this.ready = true;
+        this.dispatchEvent(new Event('ready'));
+      } else {
+        this.dispatchEvent(new ErrorEvent('error', { error: new Error(event.data.msg) }));
+      }
+    });
   }
 
   connect() {
+    this.ready = false;
     super.connect();
-    this.addEventListener('open', async () => {
-      this.send(await this.credentials.getWsLoginMessage());
-    });
+  }
+
+  async waitForReady(timeout?: number) {
+    await super.waitForReady(timeout);
+
+    if (!this.ready) {
+      await new Promise((resolve, reject) => {
+        const resolveController  = new AbortController();
+        const rejectController = new AbortController();
+
+        this.addEventListener('ready', () => {
+          resolve(undefined);
+          rejectController.abort();
+        }, { once: true, signal: resolveController.signal });
+
+        this.addEventListener('error', (err) => {
+          reject(err.error || err.data);
+          resolveController.abort();
+        }, { once: true, signal: rejectController.signal });
+      });
+    }
   }
 
   async sendTradeOp(op: WsTradeRequest<WsOrderArg | WsCancelOrderArg>) {
