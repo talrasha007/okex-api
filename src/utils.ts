@@ -1,17 +1,17 @@
 
 class Signer {
-  constructor(private cryptoKey: CryptoKey) { }
+  constructor(private cryptoKey: CryptoKey, private unixTime = false) { }
 
   async sign(path: string, params = '', method: 'GET' | 'POST' = 'GET') {
-    const timestamp = new Date().toISOString();
+    const timestamp = this.unixTime ? Date.now() / 1000 : new Date().toISOString();
     const message = `${timestamp}${method}${path}${params}`;
     const sign = await crypto.subtle.sign('HMAC', this.cryptoKey, new TextEncoder().encode(message));
     return { timestamp, sign: btoa(String.fromCharCode(...new Uint8Array(sign))) };
   }
 
-  public static async create(secret: string) {
+  public static async create(secret: string, unixTime = false) {
     const cryptoKey = await crypto.subtle.importKey('raw', new TextEncoder().encode(secret), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
-    return new Signer(cryptoKey);
+    return new Signer(cryptoKey, unixTime);
   }
 }
 
@@ -42,8 +42,8 @@ export class APICredentials {
     });
   }
 
-  public static async create(apiKey: string, apiSecret: string, passphrase: string) {
+  public static async create(apiKey: string, apiSecret: string, passphrase: string, unixTime = false) {
     if (apiKey && apiSecret && passphrase)
-      return new APICredentials(apiKey, await Signer.create(apiSecret), passphrase);
+      return new APICredentials(apiKey, await Signer.create(apiSecret, unixTime), passphrase);
   }
 }

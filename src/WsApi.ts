@@ -125,7 +125,7 @@ export class WsPublic extends WsApi {
 
 export class WsPrivate extends WsApi {
   public static async create(apiKey: string, apiSecret: string, passphrase: string, baseURL = 'wss://ws.okx.com:8443') {
-    const credentials = await APICredentials.create(apiKey, apiSecret, passphrase);
+    const credentials = await APICredentials.create(apiKey, apiSecret, passphrase, true);
     if (credentials)
       return new WsPrivate(credentials!, baseURL);
     else
@@ -138,8 +138,8 @@ export class WsPrivate extends WsApi {
 
   connect() {
     super.connect();
-    this.addEventListener('open', () => {
-      this.send(this.credentials.getWsLoginMessage());
+    this.addEventListener('open', async () => {
+      this.send(await this.credentials.getWsLoginMessage());
     });
   }
 }
