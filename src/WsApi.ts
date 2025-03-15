@@ -19,7 +19,7 @@ interface WsEventMap {
 type WsEventMapEx = WsEventMap &
   Record<WsRequestOp, WsApiEvent<WsEvent>> &
   Record<WsTradeOp, WsApiEvent<WsEvent>> &
-  Record<Exclude<WsChannel, 'tickers'>, WsApiEvent<WsDataEvent>> &
+  Record<Exclude<WsChannel, keyof WsEventMap>, WsApiEvent<WsDataEvent>> &
   Record<string, Event>;
 
 const wsEvents = new Set(['error', 'login', 'subscribe', 'unsubscribe', 'channel-conn-count']);
