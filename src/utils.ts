@@ -22,7 +22,7 @@ export class APICredentials {
     const { timestamp, sign } = await this.signer.sign(path, params, method);
     return {
       'OK-ACCESS-KEY': this.apiKey,
-      'OK-ACCESS-TIMESTAMP': timestamp,
+      'OK-ACCESS-TIMESTAMP': timestamp as string,
       'OK-ACCESS-SIGN': sign,
       'OK-ACCESS-PASSPHRASE': this.passphrase,
       ...method === 'POST' && { 'Content-Type': 'application/json' }
