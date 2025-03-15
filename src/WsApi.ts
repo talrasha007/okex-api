@@ -8,6 +8,10 @@ import type {
   WsDataEvent,
   WsEvent,
   WsTicker,
+  WsTradeOpEvent,
+  WsTradeRequest,
+  WsOrderArg,
+  WsCancelOrderArg,
 } from './types';
 
 interface WsEventMap {
@@ -52,7 +56,9 @@ class WsApi extends EventTarget {
         const event = JSON.parse(data);
         if (wsEvents.has(event.event)) {
           this.dispatchEvent(new WsApiEvent<WsEvent>(event.event, event));
-        } else if (!event.event) {
+        } else if (event.op && event.id) {
+          this.dispatchEvent(new WsApiEvent<WsTradeOpEvent>(event.op + '-' + event.id, event));
+        } else if (event.arg) {
           const ev = event as WsDataEvent;
           this.dispatchEvent(new WsApiEvent<WsDataEvent>(ev.arg.channel, ev));
         }
