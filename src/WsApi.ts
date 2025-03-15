@@ -2,6 +2,7 @@ import { APICredentials } from './utils';
 
 class WsApi extends EventTarget {
   private ws?: WebSocket;
+  private shouldReconnect = true;
 
   constructor(private url: string) {
     super();
@@ -21,13 +22,24 @@ class WsApi extends EventTarget {
 
     ws.onclose = (event) => {
       this.dispatchEvent(new CloseEvent('close', { code: event.code, reason: event.reason }));
-      this.ws = undefined;
+      if (this.ws === ws) {
+        this.ws = undefined;
+        if (this.shouldReconnect) {
+          setTimeout(() => this.connect(), 1000);
+        }
+      }
     };
 
     ws.onerror = (event) => {
       this.dispatchEvent(new ErrorEvent('error', { error: event.error }));
       ws.close();
     };
+  }
+
+  close() {
+    this.shouldReconnect = false;
+    if (this.ws)
+      this.ws.close();
   }
 }
 
