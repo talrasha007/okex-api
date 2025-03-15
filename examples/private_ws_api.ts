@@ -1,4 +1,4 @@
-import { WsPrivate } from '..';
+import { WsPrivate } from '../src';
 
 const ws = await WsPrivate.create(process.env.API_KEY!, process.env.API_SECRET!, process.env.PASSPHRASE!);
 
@@ -28,4 +28,4 @@ ws.addEventListener('positions', (event) => {
 
 ws.connect();
 await ws.subscribe({ channel: 'positions', instType: 'SWAP', instFamily: 'ETH-USD' });
-console.log(await ws.order({ instId: 'ETH-USD-SWAP', tdMode: 'cross', side: 'buy', posSide: 'short', ordType: 'market', sz: '1'}));
+console.log(await ws.order({ instId: 'ETH-USD-SWAP', tdMode: 'cross', side: 'sell', posSide: 'short', ordType: 'market', sz: '1'}));

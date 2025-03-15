@@ -1,4 +1,4 @@
-import { WsPublic } from '..';
+import { WsPublic } from '../src';
 
 const ws = new WsPublic();
 ws.addEventListener('open', () => {
