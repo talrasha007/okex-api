@@ -10,18 +10,24 @@ import type {
 } from './types';
 
 interface WsEventMap {
-  message: MessageEvent,
   close: CloseEvent,
-  error: ErrorEvent & MessageEvent<WsEvent>,
+  error: ErrorEvent & WsApiEvent<WsEvent>,
+  ticker: WsApiEvent<string>,
 }
 
 type WsEventMapEx = WsEventMap &
-  Record<WsRequestOp, MessageEvent<WsEvent>> &
-  Record<WsTradeOp, MessageEvent<WsEvent>> &
-  Record<WsChannel, MessageEvent<WsDataEvent>> &
+  Record<WsRequestOp, WsApiEvent<WsEvent>> &
+  Record<WsTradeOp, WsApiEvent<WsEvent>> &
+  Record<WsChannel, WsApiEvent<WsDataEvent>> &
   Record<string, Event>;
 
 const wsEvents = new Set(['error', 'login', 'subscribe', 'unsubscribe', 'channel-conn-count']);
+
+class WsApiEvent<T> extends Event {
+  constructor(type: string, public data: T) {
+    super(type);
+  }
+}
 
 class WsApi extends EventTarget {
   private ws?: WebSocket;
@@ -44,13 +50,10 @@ class WsApi extends EventTarget {
       if (data !== 'pong') {
         const event = JSON.parse(data);
         if (wsEvents.has(event.event)) {
-          this.dispatchEvent(new MessageEvent<WsEvent>(event.event, { data: event as WsEvent }));
+          this.dispatchEvent(new WsApiEvent<WsEvent>(event.event, event));
         } else if (!event.event) {
           const ev = event as WsDataEvent;
-          this.dispatchEvent(new MessageEvent<WsDataEvent>(
-            ev.arg.channel,
-            { data: ev }
-          ));
+          this.dispatchEvent(new WsApiEvent<WsDataEvent>(ev.arg.channel, ev));
         }
       }
     };
