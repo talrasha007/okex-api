@@ -1,14 +1,10 @@
 import { APICredentials } from './utils';
 
 import type {
-  WsAuthRequest,
-  WsAuthRequestArg,
   WsChannel,
   WsChannelSubUnSubRequestArg,
   WsDataEvent,
   WsEvent,
-  WsSubRequest,
-  WsUnsubRequest,
 } from './types';
 
 interface WsEventMap {
