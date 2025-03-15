@@ -83,6 +83,16 @@ class WsApi extends EventTarget {
   }
 }
 
+export class WsPpublic extends WsApi {
+  public static create(baseURL = 'wss://ws.okx.com:8443') {
+    return new WsPpublic(baseURL);
+  }
+
+  constructor(baseURL = 'wss://ws.okx.com:8443') {
+    super(baseURL + '/ws/v5/public');
+  }
+}
+
 export class WsPrivate extends WsApi {
   public static async create(apiKey: string, apiSecret: string, passphrase: string, baseURL = 'wss://ws.okx.com:8443') {
     const credentials = await APICredentials.create(apiKey, apiSecret, passphrase);
