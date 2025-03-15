@@ -50,6 +50,35 @@ export interface WsTicker {
   ts: string;
 }
 
+export interface WsPosition {
+  instType: string;
+  instId: string;
+  lever: string;
+  mgnMode: string;
+  posId: string;
+  posSide: string;
+  pos: string;
+  posCcy: string;
+  availPos: string;
+  avgPx: string;
+  upl: string;
+  uplRatio: string;
+  uplLastPx: string;
+  uplRatioLastPx: string;
+  liqPx: string;
+  markPx: string;
+  imr: string;
+  margin: string;
+  mgnRatio: string;
+  mmr: string;
+  tradeId: string;
+  ccy: string;
+  last: string;
+  realizedPnl: string;
+  settledPnl: string;
+  pnl: string;
+}
+
 export interface WsTradeRequest<T> {
   id: string;
   op: WsTradeOp;

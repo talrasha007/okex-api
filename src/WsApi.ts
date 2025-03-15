@@ -12,12 +12,14 @@ import type {
   WsTradeRequest,
   WsOrderArg,
   WsCancelOrderArg,
+  WsPosition,
 } from './types';
 
 interface WsEventMap {
   close: CloseEvent,
   error: ErrorEvent & WsApiEvent<WsEvent>,
   tickers: WsApiEvent<WsTicker[]>,
+  positions: WsApiEvent<WsPosition[]>,
 }
 
 type WsEventMapEx = WsEventMap &
