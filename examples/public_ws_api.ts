@@ -10,6 +10,14 @@ ws.addEventListener('message', (event) => {
   console.log(event.data);
 });
 
+ws.addEventListener('subscribe', (event) => {
+  console.log(event.data);
+});
+
+ws.addEventListener('tickers', (event) => {
+  console.log(event.data);
+});
+
 ws.addEventListener('close', (event) => {
   console.log(event.code, event.reason);
 });

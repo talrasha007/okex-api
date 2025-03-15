@@ -3,6 +3,7 @@ import { APICredentials } from './utils';
 import type {
   WsAuthRequest,
   WsAuthRequestArg,
+  WsChannel,
   WsChannelSubUnSubRequestArg,
   WsDataEvent,
   WsEvent,
@@ -14,9 +15,10 @@ interface WsEventMap {
   message: MessageEvent,
   close: CloseEvent,
   error: ErrorEvent,
+  subscribe: MessageEvent<WsEvent>,
 }
 
-type WsEventMapEx = WsEventMap & Record<string, Event>;
+type WsEventMapEx = WsEventMap & Record<WsChannel, MessageEvent<WsDataEvent>> & Record<string, Event>;
 
 class WsApi extends EventTarget {
   private ws?: WebSocket;
@@ -35,7 +37,19 @@ class WsApi extends EventTarget {
     const ws = new WebSocket(this.url);
 
     ws.onmessage = (event) => {
-      this.dispatchEvent(new MessageEvent('message', { data: event.data }));
+      const data = event.data;
+      if (data !== 'pong') {
+        const event = JSON.parse(data);
+        if (event.event === 'subscribe') {
+          this.dispatchEvent(new MessageEvent<WsEvent>('subscribe', { data: event as WsEvent }));
+        } else if (!event.event) {
+          const ev = event as WsDataEvent;
+          this.dispatchEvent(new MessageEvent<WsDataEvent>(
+            ev.arg.channel,
+            { data: ev }
+          ));
+        }
+      }
     };
 
     ws.onopen = () => {
