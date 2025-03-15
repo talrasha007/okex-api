@@ -10,7 +10,7 @@ import type {
 interface WsEventMap {
   message: MessageEvent,
   close: CloseEvent,
-  error: ErrorEvent,
+  error: ErrorEvent | MessageEvent<WsEvent>,
 }
 
 type WsEventMapEx = WsEventMap &

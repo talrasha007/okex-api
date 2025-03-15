@@ -1,12 +1,12 @@
-import { WsPublic } from '..';
+import { WsPrivate } from '..';
 
-const ws = new WsPublic();
+const ws = await WsPrivate.create(process.env.API_KEY!, process.env.API_SECRET!, process.env.PASSPHRASE!);
+
 ws.addEventListener('open', () => {
   console.log('Connected');
-  ws.subscribe({ channel: 'tickers', instId: 'ETH-USD-SWAP' });
 });
 
-ws.addEventListener('subscribe', (event) => {
+ws.addEventListener('login', (event) => {
   console.log(event.data);
 });
 
@@ -16,6 +16,10 @@ ws.addEventListener('tickers', (event) => {
 
 ws.addEventListener('close', (event) => {
   console.log(event.code, event.reason);
+});
+
+ws.addEventListener('error', (event) => {
+  console.error(event.data);
 });
 
 ws.connect();
