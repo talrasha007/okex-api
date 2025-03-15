@@ -2,6 +2,7 @@
   "name": "okex-api",
   "module": "dist/index.js",
   "type": "module",
+  "version": "1.0.0-alpha.1",
   "scripts": {
     "build": "tsc"
   },
@@ -10,5 +11,15 @@
   },
   "peerDependencies": {
     "typescript": "^5"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/talrasha007/okex-api.git"
+  },
+  "keywords": [
+    "okex",
+    "api"
+  ],
+  "author": "Tal <talrasha007@gmail.com>",
+  "license": "MIT"
 }
