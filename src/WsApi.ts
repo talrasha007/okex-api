@@ -83,9 +83,9 @@ class WsApi extends EventTarget {
   }
 }
 
-export class WsPpublic extends WsApi {
+export class WsPublic extends WsApi {
   public static create(baseURL = 'wss://ws.okx.com:8443') {
-    return new WsPpublic(baseURL);
+    return new WsPublic(baseURL);
   }
 
   constructor(baseURL = 'wss://ws.okx.com:8443') {
