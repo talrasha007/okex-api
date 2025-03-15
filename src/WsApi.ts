@@ -35,11 +35,10 @@ class WsApi extends EventTarget {
     ws.onclose = (event) => {
       this.dispatchEvent(new CloseEvent('close', { code: event.code, reason: event.reason }));
       clearInterval(pingInterval);
-      if (this.ws === ws) {
-        this.ws = undefined;
-        if (this.shouldReconnect) {
-          setTimeout(() => this.connect(), 1000);
-        }
+
+      this.ws = undefined;
+      if (this.shouldReconnect) {
+        setTimeout(() => this.connect(), 1000);
       }
     };
 
