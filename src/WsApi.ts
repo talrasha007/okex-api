@@ -41,8 +41,7 @@ class WsApi extends EventTarget {
 
   close() {
     this.shouldReconnect = false;
-    if (this.ws)
-      this.ws.close();
+    if (this.ws) this.ws.close();
   }
 
   async waitForReady(timeout = 10 * 1000) {
