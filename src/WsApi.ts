@@ -1,5 +1,15 @@
 import { APICredentials } from './utils';
 
+import type {
+  WsAuthRequest,
+  WsAuthRequestArg,
+  WsChannelSubUnSubRequestArg,
+  WsDataEvent,
+  WsEvent,
+  WsSubRequest,
+  WsUnsubRequest,
+} from './types';
+
 class WsApi extends EventTarget {
   private ws?: WebSocket;
   private shouldReconnect = true;
@@ -42,6 +52,11 @@ class WsApi extends EventTarget {
   close() {
     this.shouldReconnect = false;
     if (this.ws) this.ws.close();
+  }
+
+  async subscribe(wsEvents: WsChannelSubUnSubRequestArg[] | WsChannelSubUnSubRequestArg) {
+    const wsEventArgs = Array.isArray(wsEvents) ? wsEvents : [wsEvents];
+    await this.send({ op: 'subscribe', args: wsEventArgs });
   }
 
   async waitForReady(timeout = 10 * 1000) {
