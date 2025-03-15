@@ -88,6 +88,11 @@ class WsApi extends EventTarget {
     await this.send({ op: 'subscribe', args: wsEventArgs });
   }
 
+  async unsubscribe(wsEvents: WsChannelSubUnSubRequestArg[] | WsChannelSubUnSubRequestArg) {
+    const wsEventArgs = Array.isArray(wsEvents) ? wsEvents : [wsEvents];
+    await this.send({ op: 'unsubscribe', args: wsEventArgs });
+  }
+
   async waitForReady(timeout = 10 * 1000) {
     if (!this.ws) {
       return new Promise((resolve, reject) => {
