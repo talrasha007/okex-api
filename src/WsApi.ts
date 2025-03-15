@@ -15,10 +15,14 @@ interface WsEventMap {
   message: MessageEvent,
   close: CloseEvent,
   error: ErrorEvent,
-  subscribe: MessageEvent<WsEvent>,
 }
 
-type WsEventMapEx = WsEventMap & Record<WsChannel, MessageEvent<WsDataEvent>> & Record<string, Event>;
+type WsEventMapEx = WsEventMap &
+  Record<'error' | 'login' | 'subscribe' | 'unsubscribe' | 'channel-conn-count', WsEvent> &
+  Record<WsChannel, MessageEvent<WsDataEvent>> &
+  Record<string, Event>;
+
+const wsEvents = new Set(['error', 'login', 'subscribe', 'unsubscribe', 'channel-conn-count']);
 
 class WsApi extends EventTarget {
   private ws?: WebSocket;
@@ -40,8 +44,8 @@ class WsApi extends EventTarget {
       const data = event.data;
       if (data !== 'pong') {
         const event = JSON.parse(data);
-        if (event.event === 'subscribe') {
-          this.dispatchEvent(new MessageEvent<WsEvent>('subscribe', { data: event as WsEvent }));
+        if (wsEvents.has(event.event)) {
+          this.dispatchEvent(new MessageEvent<WsEvent>(event.event, { data: event as WsEvent }));
         } else if (!event.event) {
           const ev = event as WsDataEvent;
           this.dispatchEvent(new MessageEvent<WsDataEvent>(
@@ -101,7 +105,7 @@ class WsApi extends EventTarget {
     }
   }
 
-  private async send(data: any) {
+  protected async send(data: any) {
     if (typeof data !== 'string') data = JSON.stringify(data);
     await this.waitForReady();
     this.ws!.send(data);    
@@ -127,7 +131,14 @@ export class WsPrivate extends WsApi {
       throw new Error('No credentials');
   }
 
-  constructor(credentials: APICredentials, baseURL = 'wss://ws.okx.com:8443') {
+  constructor(private credentials: APICredentials, baseURL = 'wss://ws.okx.com:8443') {
     super(baseURL + '/ws/v5/private');
+  }
+
+  connect() {
+    super.connect();
+    this.addEventListener('open', () => {
+      this.send(this.credentials.getWsLoginMessage());
+    });
   }
 }
