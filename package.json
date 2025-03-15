@@ -1,8 +1,8 @@
 {
   "name": "okex-api",
-  "module": "dist/index.js",
-  "type": "module",
-  "version": "1.0.0-alpha.1",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",  
+  "version": "1.0.0-alpha.5",
   "files": ["dist"],
   "scripts": {
     "build": "tsc"
