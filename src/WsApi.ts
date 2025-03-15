@@ -10,12 +10,24 @@ import type {
   WsUnsubRequest,
 } from './types';
 
+interface WsEventMap {
+  message: MessageEvent,
+  close: CloseEvent,
+  error: ErrorEvent,
+}
+
+type WsEventMapEx = WsEventMap & Record<string, Event>;
+
 class WsApi extends EventTarget {
   private ws?: WebSocket;
   private shouldReconnect = true;
 
   constructor(private url: string) {
     super();
+  }
+
+  addEventListener<K extends keyof WsEventMapEx>(type: K, listener: (ev: WsEventMapEx[K]) => void, options?: AddEventListenerOptions | boolean): void {
+    super.addEventListener(type, listener as EventListener, options);
   }
 
   connect() {
