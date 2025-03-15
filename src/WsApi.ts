@@ -22,7 +22,7 @@ interface WsEventMap {
 
 type WsEventMapEx = WsEventMap &
   Record<WsRequestOp, WsApiEvent<WsEvent>> &
-  Record<WsTradeOp, WsApiEvent<WsEvent>> &
+  Record<`${WsTradeOp}-${string}`, WsApiEvent<WsTradeOpEvent>> &
   Record<Exclude<WsChannel, keyof WsEventMap>, WsApiEvent<WsDataEvent>> &
   Record<string, Event>;
 
@@ -154,5 +154,36 @@ export class WsPrivate extends WsApi {
     this.addEventListener('open', async () => {
       this.send(await this.credentials.getWsLoginMessage());
     });
+  }
+
+  async sendTradeOp(op: WsTradeRequest<WsOrderArg | WsCancelOrderArg>) {
+    const promise = new Promise<WsTradeOpEvent>((resolve, reject) => {
+      this.addEventListener(`${op.op}-${op.id}`, (event) => {
+        if (event.data.code === '0') {
+          resolve(event.data);
+        } else {
+          reject(event.data);
+        }
+      }, { once: true });
+    });
+
+    await this.send(op);
+    return await promise;
+  }
+
+  order(arg: WsOrderArg) {
+    return this.sendTradeOp({ op: 'order', id: crypto.randomUUID().replace(/-/g, ''), args: [arg] });
+  }
+
+  batchOrder(args: WsOrderArg[]) {
+    return this.sendTradeOp({ op: 'batch-orders', id: crypto.randomUUID().replace(/-/g, ''), args });
+  }
+
+  cancelOrder(arg: WsCancelOrderArg) {
+    return this.sendTradeOp({ op: 'cancel-order', id: crypto.randomUUID().replace(/-/g, ''), args: [arg] });
+  }
+
+  batchCancelOrder(args: WsCancelOrderArg[]) {
+    return this.sendTradeOp({ op: 'batch-cancel-orders', id: crypto.randomUUID().replace(/-/g, ''), args });
   }
 }
