@@ -1,6 +1,8 @@
 import { APICredentials } from './utils';
 
 import type {
+  WsTradeOp,
+  WsRequestOp,
   WsChannel,
   WsChannelSubUnSubRequestArg,
   WsDataEvent,
@@ -10,11 +12,12 @@ import type {
 interface WsEventMap {
   message: MessageEvent,
   close: CloseEvent,
-  error: ErrorEvent | MessageEvent<WsEvent>,
+  error: ErrorEvent & MessageEvent<WsEvent>,
 }
 
 type WsEventMapEx = WsEventMap &
-  Record<'error' | 'login' | 'subscribe' | 'unsubscribe' | 'channel-conn-count', WsEvent> &
+  Record<WsRequestOp, MessageEvent<WsEvent>> &
+  Record<WsTradeOp, MessageEvent<WsEvent>> &
   Record<WsChannel, MessageEvent<WsDataEvent>> &
   Record<string, Event>;
 
