@@ -260,7 +260,7 @@ import type {
 
 export class HttpApi {
   public static async create(apiKey: string, apiSecret: string, passphrase: string, baseURL = 'https://www.okx.com') {
-    return new HttpApi(await APICredentials.create(apiKey, apiSecret, passphrase));
+    return new HttpApi(await APICredentials.create(apiKey, apiSecret, passphrase), baseURL);
   }
 
   constructor(private credentials?: APICredentials, private baseURL = 'https://www.okx.com') { }
