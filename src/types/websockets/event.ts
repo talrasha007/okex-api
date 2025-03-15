@@ -113,6 +113,74 @@ export interface WsAccount {
   }[]
 }
 
+export interface WsOrder {
+  accFillSz: string;
+  amendResult: string;
+  avgPx: string;
+  cTime: string;
+  category: string;
+  ccy: string;
+  clOrdId: string;
+  code: string;
+  execType: string;
+  fee: string;
+  feeCcy: string;
+  fillFee: string;
+  fillFeeCcy: string;
+  fillNotionalUsd: string;
+  fillPx: string;
+  fillSz: string;
+  fillPnl: string;
+  fillTime: string;
+  fillPxVol: string;
+  fillPxUsd: string;
+  fillMarkVol: string;
+  fillFwdPx: string;
+  fillMarkPx: string;
+  instId: string;
+  instType: string;
+  lever: string;
+  msg: string;
+  notionalUsd: string;
+  ordId: string;
+  ordType: string;
+  pnl: string;
+  posSide: string;
+  px: string;
+  pxUsd: string;
+  pxVol: string;
+  pxType: string;
+  rebate: string;
+  rebateCcy: string;
+  reduceOnly: string;
+  reqId: string;
+  side: string;
+  attachAlgoClOrdId: string;
+  slOrdPx: string;
+  slTriggerPx: string;
+  slTriggerPxType: string;
+  source: string;
+  state: string;
+  stpId: string;
+  stpMode: string;
+  sz: string;
+  tag: string;
+  tdMode: string;
+  tgtCcy: string;
+  tpOrdPx: string;
+  tpTriggerPx: string;
+  tpTriggerPxType: string;
+  tradeId: string;
+  lastPx: string;
+  quickMgnType: string;
+  algoClOrdId: string;
+  algoId: string;
+  amendSource: string;
+  cancelSource: string;
+  isTpLimit: string;
+  uTime: string;
+}
+
 export interface WsPosition {
   instType: string;
   instId: string;
