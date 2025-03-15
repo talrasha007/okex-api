@@ -3,6 +3,7 @@
   "module": "dist/index.js",
   "type": "module",
   "version": "1.0.0-alpha.1",
+  "files": ["dist"],
   "scripts": {
     "build": "tsc"
   },
