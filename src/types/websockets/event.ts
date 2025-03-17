@@ -1,4 +1,4 @@
-import type { WsChannel, WsTradeOp } from './request';
+import type { WsChannelSubUnSubRequestArg, WsTradeOp } from './request';
 
 export interface WsEvent {
   event: 'error' | 'login' | 'subscribe' | 'unsubscribe' | 'channel-conn-count';
@@ -9,12 +9,7 @@ export interface WsEvent {
 }
 
 export interface WsDataEvent<T = any> {
-  arg: {
-    channel: WsChannel;
-    uid?: string;
-    instId?: string;
-    instFamily?: string;
-  };
+  arg: WsChannelSubUnSubRequestArg;
   data: T;
 }
 

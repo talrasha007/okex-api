@@ -20,22 +20,28 @@ import type {
 interface WsEventMap {
   close: CloseEvent,
   error: ErrorEvent & WsApiEvent<WsEvent>,
-  tickers: WsApiEvent<WsTicker[]>,
-  positions: WsApiEvent<WsPosition[]>,
-  orders: WsApiEvent<WsOrder[]>,
-  account: WsApiEvent<WsAccount[]>,
+  tickers: WsChannelEvent<WsTicker[]>,
+  positions: WsChannelEvent<WsPosition[]>,
+  orders: WsChannelEvent<WsOrder[]>,
+  account: WsChannelEvent<WsAccount[]>,
 }
 
 type WsEventMapEx = WsEventMap &
   Record<WsRequestOp, WsApiEvent<WsEvent>> &
   Record<`${WsTradeOp}-${string}`, WsApiEvent<WsTradeOpEvent>> &
-  Record<Exclude<WsChannel, keyof WsEventMap>, WsApiEvent<WsDataEvent>> &
+  Record<Exclude<WsChannel, keyof WsEventMap>, WsChannelEvent> &
   Record<string, Event>;
 
 const wsEvents = new Set(['error', 'login', 'subscribe', 'unsubscribe', 'channel-conn-count']);
 
 class WsApiEvent<T> extends Event {
   constructor(type: string, public data: T) {
+    super(type);
+  }
+}
+
+class WsChannelEvent<T = any[]> extends Event {
+  constructor(type: string, public arg: WsChannelSubUnSubRequestArg, public data: T) {
     super(type);
   }
 }
@@ -66,7 +72,7 @@ class WsApi extends EventTarget {
           this.dispatchEvent(new WsApiEvent<WsTradeOpEvent>(event.op + '-' + event.id, event));
         } else if (event.arg) {
           const ev = event as WsDataEvent;
-          this.dispatchEvent(new WsApiEvent<WsDataEvent>(ev.arg.channel, ev));
+          this.dispatchEvent(new WsChannelEvent<WsDataEvent>(ev.arg.channel, ev.arg, ev));
         }
       }
     };
