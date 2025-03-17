@@ -72,7 +72,7 @@ class WsApi extends EventTarget {
           this.dispatchEvent(new WsApiEvent<WsTradeOpEvent>(event.op + '-' + event.id, event));
         } else if (event.arg) {
           const ev = event as WsDataEvent;
-          this.dispatchEvent(new WsChannelEvent<WsDataEvent>(ev.arg.channel, ev.arg, ev));
+          this.dispatchEvent(new WsChannelEvent<WsDataEvent>(ev.arg.channel, ev.arg, ev.data));
         }
       }
     };
