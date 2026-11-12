@@ -3,7 +3,7 @@ A modern, asynchronous, and easy-to-use [Okx API](https://www.okx.com/docs-v5) w
 
 This lib is developed by [bun](https://bun.sh), and written in typescript.
 
-Thanks to [okx-api](https://github.com/tiagosiebler/okx-api), it defines almost all types of apis, and it's good to use. But it uses axios for restful api, ws for websocket api(when useing node), and node:crypto for signature, so it cannot be used in Cloudfalre Workers, that's why i rewrite.
+Thanks to [okx-api](https://github.com/sieblyio/okex-api), it defines almost all types of apis, and it's good to use. But it uses axios for restful api, ws for websocket api(when useing node), and node:crypto for signature, so it cannot be used in Cloudfalre Workers, that's why i rewrite.
 
 ## Features
 - Depends nothing.
